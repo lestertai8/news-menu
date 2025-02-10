@@ -1,0 +1,10 @@
+/* how to import google fonts
+https://gist.github.com/lunelson/4ec7c7470a516465bff0
+*/
+
+@import url('http://fonts.googleapis.com/css?family=Merriweather:400,700');
+
+.start-page {
+    align-items: center;
+    font-family: 'Merriweather', serif;
+}
