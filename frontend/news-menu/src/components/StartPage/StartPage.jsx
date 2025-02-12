@@ -5,6 +5,10 @@ import "./StartPage.css";
 import api from "../../api.js";
 
 
+// tutorial on audio in react app
+// https://www.youtube.com/watch?v=U1T_J6Odoqg
+
+
 function StartPage() {
     const [persona, setPersona] = useState("");
     const [time, setTime] = useState("");
@@ -37,7 +41,6 @@ function StartPage() {
     
     return (
         <div className="start-page">
-            <h1>News Menu</h1>
             <h2>How long will your meal be?</h2>
             <ButtonGroup variant="contained" aria-label="Basic button group">
                 <Button onClick={() => handleButtonTime(1)}>1 minute</Button>
