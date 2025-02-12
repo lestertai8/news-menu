@@ -11,27 +11,34 @@ import api from "../../api.js";
 
 function StartPage() {
     const [persona, setPersona] = useState("");
-    const [time, setTime] = useState("");
+    const [time, setTime] = useState(0);
+    const [topic, setTopic] = useState("");
     const [text, setText] = useState("");
     const [summary, setSummary] = useState("");
     // const [quiz, setQuiz] = useState("");
 
     // set the persona when the button is clicked
-    const handleButtonName = (name) => {
+    const handleButtonPersona = (name) => {
         setPersona(name);
-        // console.log(name);
+        // console.log(persona);
     }
 
     // set the time when the button is clicked
-    const handleButtonTime = (time) => {
-        setTime(time);
-        // console.log(time);
+    const handleButtonTime = (minutes) => {
+        setTime(minutes);
+    }
+    // set the topic when the button is clicked
+    const handleButtonTopic = (subject) => {
+        setTopic(subject);
     }
 
     const handleSubmit = async () => {
         try {
-            const story = "Once there was a little piggy who lived in a house made of straw. One day, a big bad wolf came along and blew it down.";
-            setText(story);
+            setText("");
+            setSummary("");
+            // const story = "Once there was a little piggy who lived in a house made of straw. One day, a big bad wolf came along and blew it down.";
+            const story = await api.post("/articles", {time: time});
+            setText(story.data.news.slice(0, time).join("\n\n\n")); // there is now an array of text...
             const response = await api.post("/summary", {persona: persona, text: text});
             setSummary(response.data.summary);
         } catch (error) {
@@ -47,13 +54,18 @@ function StartPage() {
                 <Button onClick={() => handleButtonTime(2)}>2 minutes</Button>
                 <Button onClick={() => handleButtonTime(3)}>3 minutes</Button>
             </ButtonGroup>
+            <h2>What cuisine are you interested in?</h2>
+            <ButtonGroup variant="contained" aria-label="Basic button group">
+                <Button onClick={() => handleButtonTopic("Lifestyle")}>Lifestyle</Button>
+                <Button onClick={() => handleButtonTopic("Sports")}>Sports</Button>
+                <Button onClick={() => handleButtonTopic("Economics")}>Economics</Button>
+            </ButtonGroup>
             <h2>Who will your server be?</h2>
             <ButtonGroup variant="contained" aria-label="Basic button group">
                 {/* Source: used ChatGPT to generate some examples of personas */}
-                <Button onClick={() => handleButtonName("Elon Musk")}>Elon Musk</Button>
-                <Button onClick={() => handleButtonName("William Shakespeare")}>William Shakespeare</Button>
-                <Button onClick={() => handleButtonName("Conspiracy Theorist")}>Conspiracy Theorist</Button>
-                <Button onClick={() => handleButtonName("Donald Trump")}>Donald Trump</Button>
+                <Button onClick={() => handleButtonPersona("Middle Schooler")}>Middle Schooler</Button>
+                <Button onClick={() => handleButtonPersona("William Shakespeare")}>William Shakespeare</Button>
+                <Button onClick={() => handleButtonPersona("Conspiracy Theorist")}>Conspiracy Theorist</Button>
             </ButtonGroup>
             <h2>Ready to order?</h2>
             <Button variant="contained" onClick={handleSubmit}>All ready!</Button>

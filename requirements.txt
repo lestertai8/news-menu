@@ -2,3 +2,5 @@ openai
 fastapi
 uvicorn
 requests
+newspaper4k
+lxml_html_clean

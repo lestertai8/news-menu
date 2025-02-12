@@ -10,7 +10,7 @@ import "./AppBar.css";
 
 function NewsAppBar() {
   return (
-    <Box>
+    <Box className="app-bar-box">
       <AppBar className="app-bar">
         <Toolbar>
           {/* <IconButton
@@ -22,7 +22,7 @@ function NewsAppBar() {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography className="title" variant="h2" component="div" sx={{ flexGrow: 1 }}>
+          <Typography className="title" variant="h2" component="div">
             News Menu
           </Typography>
         </Toolbar>

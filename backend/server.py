@@ -13,6 +13,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
+# import functions
+import news_func
+
+
+
 # Guide for using FastAPI: https://www.youtube.com/watch?v=iWS9ogMPOI0
 app = FastAPI()
 
@@ -62,7 +67,7 @@ def summarize_text(body: SummaryCall):
         messages=[
             {
             "role": "system",
-            "content": f"You are {body.persona}. Summarize the given text with the expected tonality, style of writing, and point of view."
+            "content": f"You are {body.persona}. Summarize the given text with the expected tonality, style of writing, and point of view. I may give you multiple stories, separated by 3 line breaks. Keep the summaries separate in the output by using labels like 'Story #'. Summarize each story to be read in 1 minute, using average reading speed as the calculator."
             },
             {
             "role": "user",
@@ -141,7 +146,17 @@ def tts(body: TTSCall):
     response.stream_to_file(speech_file_path)
 
     return speech_file_path
+# --------------------------------
+# Find articles
 
+class ArticleCall(BaseModel):
+    time: int
+
+@app.post("/articles")
+def articles(body: ArticleCall):
+    news = news_func.x_min_news(body.time)
+    print(news)
+    return {"news": news}
 # --------------------------------
 
 # this will not reload the server when saving the file

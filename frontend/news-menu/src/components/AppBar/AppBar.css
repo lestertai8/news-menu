@@ -1,5 +1,9 @@
 @import url('http://fonts.googleapis.com/css?family=Merriweather:400,700');
 
+.app-bar-box {
+    padding: 50px;
+}
+
 .app-bar {
     position: static;
     width: 100%;
@@ -8,4 +12,5 @@
 
 .title {
     font-family: 'Merriweather', serif;
+    flex-grow: 1;
 }
