@@ -7,7 +7,7 @@ import newspaper
 if not os.getenv("NEWS_API_KEY"):
     os.environ["NEWS_API_KEY"] = "MXoI1cBrjZZLvp5kfwXqZKZ1bUclXVFuaUfLcd0j"
 
-def retrieve_news():
+def retrieve_news(category):
     endpoint = "https://api.thenewsapi.com/v1/news/top"
 
 
@@ -15,8 +15,10 @@ def retrieve_news():
     params = {
         "api_token": os.getenv("NEWS_API_KEY"),
         "locale": "us",
-        "limit": 10
+        "limit": 10,
+        "categories": [category]
     }
+    # Supported categories: general | science | sports | business | health | entertainment | tech | politics | food | travel
 
     res = requests.get(endpoint, params=params)
     body = res.json()
@@ -45,7 +47,7 @@ def scrape_news(url):
 def x_min_news(minutes):
     text_array = []
 
-    urls = retrieve_news()
+    urls = retrieve_news("sports")
     for i in range(minutes):
         text = scrape_news(urls[i])
         text_array.append(text)

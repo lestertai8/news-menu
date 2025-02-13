@@ -1,8 +1,6 @@
 # general python packages
 # need for env variables
 import os
-# need for paths (tts)
-from pathlib import Path
 
 # OpenAI
 from openai import OpenAI
@@ -137,7 +135,7 @@ class TTSCall(BaseModel):
 @app.post("/tts")
 def tts(body: TTSCall):
     client = OpenAI()
-    speech_file_path = Path(__file__).parent / "speech.mp3"
+    speech_file_path = "../frontend/news-menu/public/speech.mp3"
     response = client.audio.speech.create(
         model="tts-1",
         voice="sage",

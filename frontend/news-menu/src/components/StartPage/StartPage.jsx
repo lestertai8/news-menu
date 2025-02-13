@@ -56,9 +56,9 @@ function StartPage() {
             </ButtonGroup>
             <h2>What cuisine are you interested in?</h2>
             <ButtonGroup variant="contained" aria-label="Basic button group">
-                <Button onClick={() => handleButtonTopic("Lifestyle")}>Lifestyle</Button>
-                <Button onClick={() => handleButtonTopic("Sports")}>Sports</Button>
-                <Button onClick={() => handleButtonTopic("Economics")}>Economics</Button>
+                <Button onClick={() => handleButtonTopic("tech")}>Tech</Button>
+                <Button onClick={() => handleButtonTopic("sports")}>Sports</Button>
+                <Button onClick={() => handleButtonTopic("food")}>Food</Button>
             </ButtonGroup>
             <h2>Who will your server be?</h2>
             <ButtonGroup variant="contained" aria-label="Basic button group">

@@ -32,10 +32,16 @@ function App() {
     //     Click on the Vite and React logos to learn more
     //   </p>
     // </>
-    <div>
+    <div className="app-content">
       <AppBar/>
       <StartPage/>
-      {/* <Story/> */}
+      <Story
+        title="Title"
+        author="Author"
+        text="Once upon a time there were 3 little piggies. One day, a big bad wolf came along and blew them down."
+        url="https://google.com"
+        source="Google"
+      />
     </div>
   )
 }
