@@ -12,6 +12,7 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import { Icon } from '@mui/material';
 import "./Story.css";
+import api from "../../api.js";
 
 // dialog imports
 import Button from '@mui/material/Button';
@@ -24,14 +25,24 @@ import CloseIcon from '@mui/icons-material/Close';
 
 function ActionAreaCard( {
     title,
-    author,
+    date,
     text,
+    summary,
+    imageURL,
     url,
     source,
     quizQuestion,
     quizChoices,
     quizAnswer
 }) {
+
+  // this determines if the summary is shown as opposed to the original text
+  const [showSummary, setShowSummary] = React.useState(false);
+
+  const handleClickText = () => {
+    setShowSummary(!showSummary);
+    // console.log(showSummary);
+  }
 
   // this is for the quiz (Customization example from Google MUI: https://mui.com/material-ui/react-dialog/?srsltid=AfmBOooOrBhRZVvwd4PBTdl6knq1k646HC1PlcMXUQFrsG08r4jpZUk9)
   const [open, setOpen] = React.useState(false);
@@ -60,6 +71,8 @@ function ActionAreaCard( {
   
   // ChatGPT suggests making the audio file its own state. Prompt: how do i pause playing audio using react?
   // setAudio will be used after stories are retrieved and summarized by openai
+  // api.post("/tts", {text: summary});
+
   const [audio, setAudio] = React.useState(new Audio('./speech.mp3'));
 
   // also for the quiz popup
@@ -87,10 +100,9 @@ function ActionAreaCard( {
 
   return (
     <Card className="newspaper-card">
-      {/* <CardActionArea> */}
         <CardHeader
           title={title}
-          subheader={author}
+          subheader={Date(date)}
           action={
             <IconButton onClick={handleAudio}>
               <RecordVoiceOverIcon />
@@ -100,14 +112,23 @@ function ActionAreaCard( {
         />
         <CardMedia
           component="img"
-          height="140"
-          image="/static/images/cards/contemplative-reptile.jpg"
-          alt="green iguana"
+          height="500"
+          image={imageURL}
+          alt="There should be a media image here..."
         />
+
+        <CardActionArea onClick={handleClickText}>
+          <CardContent className="story-card">
+            <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
+              {!showSummary ? "Original Article" : "Summarized Article"}
+              <br/>
+              <br/>
+              {!showSummary ? text : summary}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {text}
-          </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', justifyContent: 'left' }}>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -123,9 +144,8 @@ function ActionAreaCard( {
               <QuizIcon/>
             </IconButton>
           </Box>
-
         </CardContent>
-      {/* </CardActionArea> */}
+
       <Dialog onClose={handleClose} open={open}>
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
           Quick Quiz

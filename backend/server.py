@@ -1,6 +1,7 @@
 # general python packages
 # need for env variables
 import os
+import json
 
 # OpenAI
 from openai import OpenAI
@@ -65,7 +66,10 @@ def summarize_text(body: SummaryCall):
         messages=[
             {
             "role": "system",
-            "content": f"You are {body.persona}. Summarize the given text with the expected tonality, style of writing, and point of view. I may give you multiple stories, separated by 3 line breaks. Keep the summaries separate in the output by using labels like 'Story #'. Summarize each story to be read in 1 minute, using average reading speed as the calculator."
+            "content": f"""
+            You are {body.persona}. 
+            Summarize the given text with the expected tonality, style of writing, and point of view. 
+            Summarize the story to be read in 1 minute, using average reading speed (200 wpm) as the calculator."""
             },
             {
             "role": "user",
@@ -87,8 +91,7 @@ def summarize_text(body: SummaryCall):
 # Quiz Generation Function
 # model for quiz call
 class QuizCall(BaseModel):
-    persona: str
-    summary: str
+    text: str
 
 # how to format openai responses as JSON
 # https://platform.openai.com/docs/guides/structured-outputs#json-mode
@@ -108,11 +111,11 @@ def generate_quiz(body: QuizCall):
     response = client.beta.chat.completions.parse(
     model="gpt-4o-mini",
     messages=[
-        {"role": "system", "content": f"You are {body.persona} who is amazing at writing quiz questions. Keep this person's style of speaking while writing the question."},
+        {"role": "system", "content": f"You are an expert at writing quiz questions that best summarize a given text."},
         {
         "role": "user",
         "content": f"""
-        Create a question for {body.summary}. The question should be a multiple choice question with 3 options: A, B, and C. Indicate the correct answer too.
+        Create a question for {body.text}. The question should be a multiple choice question with 3 options: A, B, and C. Indicate the correct answer too.
         """
         }
     ],
@@ -124,7 +127,7 @@ def generate_quiz(body: QuizCall):
 
     quiz = response.choices[0].message.parsed
 
-    print(quiz)
+    # print(quiz)
     return(quiz)
 # ---------------------------------------------
 # TTS Function: https://platform.openai.com/docs/guides/text-to-speech
@@ -148,13 +151,17 @@ def tts(body: TTSCall):
 # Find articles
 
 class ArticleCall(BaseModel):
+    category: str
     time: int
+    persona: str
 
 @app.post("/articles")
 def articles(body: ArticleCall):
-    news = news_func.x_min_news(body.time)
-    print(news)
-    return {"news": news}
+    articles = news_func.retrieve_news(body.category, body.time, body.persona)
+    # print(news)
+    # articles now holds an array of NewsArticle objects. we need to create a json object to send
+    # obj.__dict__ converts the object to a dictionary?
+    return {"news": [article.__dict__ for article in articles]}
 # --------------------------------
 
 # this will not reload the server when saving the file

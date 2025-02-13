@@ -1,3 +1,8 @@
 .newspaper-card {
     background-color: #faf0e6;
+    margin: 20px;
+}
+
+.story-card {
+    background-color: bisque;
 }

@@ -8,3 +8,7 @@ https://gist.github.com/lunelson/4ec7c7470a516465bff0
     align-items: center;
     font-family: 'Merriweather', serif;
 }
+
+.story-cards {
+    padding: 20px;
+}

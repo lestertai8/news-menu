@@ -35,13 +35,14 @@ function App() {
     <div className="app-content">
       <AppBar/>
       <StartPage/>
-      <Story
+      {/* <Story
         title="Title"
-        author="Author"
+        date="June 1, 2024"
         text="Once upon a time there were 3 little piggies. One day, a big bad wolf came along and blew them down."
+        imageURL="https://picsum.photos/200"
         url="https://google.com"
         source="Google"
-      />
+      /> */}
     </div>
   )
 }

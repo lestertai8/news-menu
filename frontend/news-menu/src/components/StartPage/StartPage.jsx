@@ -3,6 +3,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { useState } from 'react';
 import "./StartPage.css";
 import api from "../../api.js";
+import Story from "../Story/Story.jsx";
 
 
 // tutorial on audio in react app
@@ -13,8 +14,9 @@ function StartPage() {
     const [persona, setPersona] = useState("");
     const [time, setTime] = useState(0);
     const [topic, setTopic] = useState("");
-    const [text, setText] = useState("");
-    const [summary, setSummary] = useState("");
+    // const [text, setText] = useState("");
+    const [articles, setArticles] = useState([]);
+    // const [summary, setSummary] = useState("");
     // const [quiz, setQuiz] = useState("");
 
     // set the persona when the button is clicked
@@ -34,15 +36,23 @@ function StartPage() {
 
     const handleSubmit = async () => {
         try {
-            setText("");
-            setSummary("");
+            setArticles([]);
+            const res = await api.post("/articles", {category: topic, time: time, persona: persona});
+            setArticles(res.data.news);
+            // there's now an array of articles... we can parse each article and get the text, author, etc.
+            // https://stackoverflow.com/questions/69318193/how-to-use-map-in-react-to-create-multiple-component
+
+
+
+            // setText("");
+            // setSummary("");
             // const story = "Once there was a little piggy who lived in a house made of straw. One day, a big bad wolf came along and blew it down.";
-            const story = await api.post("/articles", {time: time});
-            setText(story.data.news.slice(0, time).join("\n\n\n")); // there is now an array of text...
-            const response = await api.post("/summary", {persona: persona, text: text});
-            setSummary(response.data.summary);
+            // const story = await api.post("/articles", {time: time});
+            // setText(story.data.news.slice(0, time).join("\n\n\n")); // there is now an array of text...
+            // const response = await api.post("/summary", {persona: persona, text: text});
+            // setSummary(response.data.summary);
         } catch (error) {
-            console.error("Error getting summary:", error);
+            console.error("Error getting articles:", error);
         }
     }
     
@@ -69,10 +79,23 @@ function StartPage() {
             </ButtonGroup>
             <h2>Ready to order?</h2>
             <Button variant="contained" onClick={handleSubmit}>All ready!</Button>
-            <h2>Original Text</h2>
+            {/* <h2>Original Text</h2>
             <h3>{text || "no text"}</h3>
             <h2>{persona || "no one selected yet"}</h2>
-            <h3>{summary || "no summary yet"}</h3>
+            <h3>{summary || "no summary yet"}</h3> */}
+            <div className="story-cards">
+                {articles.map((article) => (
+                    <Story 
+                        title={article.title}
+                        date={article.date}
+                        text={article.text}
+                        summary={article.summary} // not currently used in story comp
+                        imageURL={article.image}
+                        url={article.url}
+                        source={article.source}
+                    />
+                ))}
+            </div>
         </div>
     );
 }
