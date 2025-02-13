@@ -76,6 +76,7 @@ function StartPage() {
                 <Button onClick={() => handleButtonPersona("Middle Schooler")}>Middle Schooler</Button>
                 <Button onClick={() => handleButtonPersona("William Shakespeare")}>William Shakespeare</Button>
                 <Button onClick={() => handleButtonPersona("Conspiracy Theorist")}>Conspiracy Theorist</Button>
+                <Button onClick={() => handleButtonPersona("Angry person")}>Sarcastic Person</Button>
             </ButtonGroup>
             <h2>Ready to order?</h2>
             <Button variant="contained" onClick={handleSubmit}>All ready!</Button>
