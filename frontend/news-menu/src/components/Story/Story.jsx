@@ -36,6 +36,9 @@ function ActionAreaCard( {
     quizAnswer
 }) {
 
+  // console.log("Quiz choices: " + quizChoices);
+  console.log("Quiz answer: " + quizAnswer);
+
   // this determines if the summary is shown as opposed to the original text
   const [showSummary, setShowSummary] = React.useState(false);
 
@@ -56,7 +59,7 @@ function ActionAreaCard( {
 
   // lets handle quiz answers after clicking "Submit answer"
   const handleQuizAnswer = (answer) => {
-    if (answer == "A") {
+    if (answer == quizAnswer) {
       console.log("Correct answer");
       setCorrect("correct");
     }
@@ -164,7 +167,7 @@ function ActionAreaCard( {
         </IconButton>
         <DialogContent dividers>
             <Typography gutterBottom>
-              What is the capital of Illinois?
+              {quizQuestion}
             </Typography>
             {/* <Typography gutterBottom>
               Springfield
@@ -172,9 +175,9 @@ function ActionAreaCard( {
             <Typography gutterBottom>
               Cleveland
             </Typography> */}
-            <Button onClick={() => handleButtonChoice("A")}>A. Springfield</Button>
-            <Button onClick={() => handleButtonChoice("B")}>B. Cleveland</Button>
-            <Button onClick={() => handleButtonChoice("C")}>C. Chicago</Button>
+            <Button onClick={() => handleButtonChoice("A")}>{quizChoices[0]}</Button>
+            <Button onClick={() => handleButtonChoice("B")}>{quizChoices[1]}</Button>
+            <Button onClick={() => handleButtonChoice("C")}>{quizChoices[2]}</Button>
             <Typography gutterBottom>
               {/* if ? then : elif ? then : else */}
               {correct==="correct" ? "Correct!" : correct==="incorrect" ? "Incorrect!": ""}

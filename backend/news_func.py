@@ -2,6 +2,7 @@ import os
 import requests
 import newspaper
 from openai import OpenAI
+from pydantic import BaseModel
 
 # News API
 # hopefully github doesn't cry abt it
@@ -10,7 +11,7 @@ if not os.getenv("NEWS_API_KEY"):
 
 # create a news article class
 class NewsArticle:
-    def __init__(self, title, date, text, image_url, url, source, summary):
+    def __init__(self, title, date, text, image_url, url, source, summary, quiz_question, quiz_choices, quiz_answer):
         self.title = title
         self.date = date
         self.text = text
@@ -18,6 +19,9 @@ class NewsArticle:
         self.url = url
         self.source = source
         self.summary = summary
+        self.quiz_question = quiz_question
+        self.quiz_choices = quiz_choices
+        self.quiz_answer = quiz_answer
 
 # Newspaper4k: https://newspaper4k.readthedocs.io/en/latest/
 # this simply gets text from a url
@@ -57,6 +61,42 @@ def summarize_text(text, persona):
 
 
 
+def generate_quiz(text):
+    client = OpenAI()
+
+    class QuizQuestion(BaseModel):
+        question: str
+        possible_answers: list[str]
+        answer: str
+
+    # class Quiz(BaseModel):
+    #     list[QuizQuestion]
+
+
+    response = client.beta.chat.completions.parse(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": f"You are an expert at writing quiz questions that best summarize a given text."},
+        {
+        "role": "user",
+        "content": f"""
+        Create a question for {text}. The question should be a multiple choice question with 3 options: A, B, and C. Indicate the correct answer as a letter: either "A" "B" or "C".
+        """
+        }
+    ],
+    temperature=0.5,
+    max_tokens=256,
+    top_p=1,
+    response_format=QuizQuestion
+    )
+
+    quiz = response.choices[0].message.parsed
+
+    # print(quiz)
+    return(quiz)
+
+
+
 def retrieve_news(category, num_articles, persona):
     endpoint = "https://api.thenewsapi.com/v1/news/top"
 
@@ -81,14 +121,19 @@ def retrieve_news(category, num_articles, persona):
     # len(articles) is equal to the 'limit' param
     # we need to build an array of article objects
     for i in range(len(articles)):
+        raw_text = scrape_news(articles[i]["url"])
+        quiz = generate_quiz(raw_text)
         articles_array.append(NewsArticle(
             articles[i]["title"],
             articles[i]["published_at"],
-            scrape_news(articles[i]["url"]),
+            raw_text,
             articles[i]["image_url"],
             articles[i]["url"],
             articles[i]["source"],
-            summarize_text(scrape_news(articles[i]["url"]), persona)
+            summarize_text(raw_text, persona),
+            quiz.question,
+            quiz.possible_answers,
+            quiz.answer
         ))
     # print(articles_array[0].text)
 

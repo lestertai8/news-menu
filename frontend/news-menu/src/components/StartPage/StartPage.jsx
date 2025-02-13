@@ -93,6 +93,9 @@ function StartPage() {
                         imageURL={article.image}
                         url={article.url}
                         source={article.source}
+                        quizQuestion={article.quiz_question}
+                        quizChoices={article.quiz_choices}
+                        quizAnswer={article.quiz_answer}
                     />
                 ))}
             </div>
