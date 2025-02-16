@@ -16,3 +16,7 @@ https://gist.github.com/lunelson/4ec7c7470a516465bff0
 .loading-button:disabled {
     background-color: white !important;
 }
+
+.alert {
+    margin: 20px;
+}
