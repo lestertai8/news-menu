@@ -29,7 +29,7 @@ origins = [
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:5175",
-    "https://lestertai8.github.io/news-menu/"
+    "https://lestertai8.github.io"
 ]
 
 # if this doesn't work, use allow_origins=["*"]
