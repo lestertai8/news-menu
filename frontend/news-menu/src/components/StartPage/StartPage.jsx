@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import "./StartPage.css";
 import api from "../../api.js";
 import Story from "../Story/Story.jsx";
@@ -34,8 +34,19 @@ function StartPage() {
         setTopic(subject);
     }
 
+    const [buttonLoading, setButtonLoading] = useState(false);
+
+    useEffect(() => {
+        // once something renders, we can switch back from the loading button
+        if (articles.length > 0) {
+            setButtonLoading(false);
+        }
+    }, [articles]);
+
     const handleSubmit = async () => {
         try {
+            // button begins to load
+            setButtonLoading(true);
             setArticles([]);
             const res = await api.post("/articles", {category: topic, time: time, persona: persona});
             setArticles(res.data.news);
@@ -79,7 +90,9 @@ function StartPage() {
                 <Button onClick={() => handleButtonPersona("Angry person")}>Sarcastic Person</Button>
             </ButtonGroup>
             <h2>Ready to order?</h2>
-            <Button variant="contained" onClick={handleSubmit}>All ready!</Button>
+            {buttonLoading ? 
+            <Button variant="contained" disabled className="loading-button">Loading...</Button> :
+            <Button variant="contained" onClick={handleSubmit}>All ready!</Button>}
             {/* <h2>Original Text</h2>
             <h3>{text || "no text"}</h3>
             <h2>{persona || "no one selected yet"}</h2>

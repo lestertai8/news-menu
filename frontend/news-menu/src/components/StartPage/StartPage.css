@@ -12,3 +12,7 @@ https://gist.github.com/lunelson/4ec7c7470a516465bff0
 .story-cards {
     padding: 20px;
 }
+
+.loading-button:disabled {
+    background-color: white !important;
+}
