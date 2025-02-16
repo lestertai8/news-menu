@@ -63,7 +63,7 @@ def summarize_text(body: SummaryCall):
             {
             "role": "system",
             "content": f"""
-            You are {body.persona}. 
+            You are {body.persona}. Make it obvious that you are this persona, but also try to maintain the facts given in the text.
             Summarize the given text with the expected tonality, style of writing, and point of view. 
             Summarize the story to be read in 1 minute, using average reading speed (200 wpm) as the calculator."""
             },

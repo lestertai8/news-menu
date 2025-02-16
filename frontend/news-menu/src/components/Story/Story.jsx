@@ -40,7 +40,7 @@ function ActionAreaCard( {
   console.log("Quiz answer: " + quizAnswer);
 
   // this determines if the summary is shown as opposed to the original text
-  const [showSummary, setShowSummary] = React.useState(false);
+  const [showSummary, setShowSummary] = React.useState(true);
 
   const handleClickText = () => {
     setShowSummary(!showSummary);
@@ -123,7 +123,7 @@ function ActionAreaCard( {
         <CardActionArea onClick={handleClickText}>
           <CardContent className="story-card">
             <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
-              {!showSummary ? "Original Article" : "Summarized Article"}
+              {!showSummary ? "Original Article" : "AI-Summarized Article"}
               <br/>
               <br/>
               {!showSummary ? text : summary}
