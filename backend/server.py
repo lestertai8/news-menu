@@ -28,7 +28,8 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",
     "http://localhost:5174",
-    "http://localhost:5175"
+    "http://localhost:5175",
+    "https://lestertai8.github.io/news-menu/"
 ]
 
 # if this doesn't work, use allow_origins=["*"]
@@ -38,11 +39,6 @@ app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True
 @app.get("/")
 def root():
     return {"Hello": "World"}
-
-# set openai api key
-# github might yell at me
-if not os.getenv("OPENAI_API_KEY"):
-    os.environ["OPENAI_API_KEY"] = "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"
 
 
 # ------------------------------------
