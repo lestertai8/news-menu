@@ -29,12 +29,11 @@ origins = [
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:5175",
-    "https://lestertai8.github.io",
-    "https://generationalcookbook.web.app"
+    "https://lestertai8.github.io"
 ]
 
 # if this doesn't work, use allow_origins=["*"]
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 # example from the video
 @app.get("/")
@@ -161,48 +160,9 @@ def articles(body: ArticleCall):
     return {"news": [article.__dict__ for article in articles]}
 # --------------------------------
 
+
 # --------------------------------
 # --------------------------------
-
-class JournalCall(BaseModel):
-    answers: list
-@app.post("/writejournal")
-def write_journal(body: JournalCall):
-    client = OpenAI()
-
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-            "role": "system",
-            "content": f"""
-            You are an experienced chef who can summarize answers to questions from user input. 
-            You are writing a journal entry based on answers. Make the entry feel organic while maintaining correctness based on the answers. 
-            """
-            },
-            {
-            "role": "user",
-            "content": f"""
-            Here are my answers to the questions:
-            Q: Who invented this recipe and when is it usually made?
-            A: {body.answers[0]}
-            Q: What is a memory that you associate with this recipe?
-            A: {body.answers[1]}
-            Q: What makes this recipe unique in your family?
-            A: {body.answers[2]}
-            """
-            }
-        ],
-        temperature=1,
-        max_tokens=1024,
-        top_p=1
-    )
-
-    journal_entry = response.choices[0].message.content
-
-    print(journal_entry)
-    return {"journal": journal_entry}
-
 # this will not reload the server when saving the file
 # for development... The below line allows refreshing
 # `uvicorn server:app --reload`
