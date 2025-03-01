@@ -10,9 +10,12 @@ import LinkIcon from '@mui/icons-material/Link';
 import IconButton from '@mui/material/IconButton';
 import QuizIcon from '@mui/icons-material/Quiz';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
+import ForumIcon from '@mui/icons-material/Forum';
 import { Icon } from '@mui/material';
 import "./Story.css";
 import api from "../../api.js";
+import Divider from '@mui/material/Divider';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 // dialog imports
 import Button from '@mui/material/Button';
@@ -36,8 +39,15 @@ function ActionAreaCard( {
     quizAnswer
 }) {
 
+  const personas = [
+    "Middle Schooler",
+    "William Shakespeare",
+    "Conspiracy Theorist",
+    "Sarcastic Person"
+]
+
   // console.log("Quiz choices: " + quizChoices);
-  console.log("Quiz answer: " + quizAnswer);
+  // console.log("Quiz answer: " + quizAnswer);
 
   // this determines if the summary is shown as opposed to the original text
   const [showSummary, setShowSummary] = React.useState(true);
@@ -60,11 +70,11 @@ function ActionAreaCard( {
   // lets handle quiz answers after clicking "Submit answer"
   const handleQuizAnswer = (answer) => {
     if (answer == quizAnswer) {
-      console.log("Correct answer");
+      // console.log("Correct answer");
       setCorrect("correct");
     }
     else {
-      console.log("Incorrect answer");
+      // console.log("Incorrect answer");
       setCorrect("incorrect");
     }
   }
@@ -100,98 +110,223 @@ function ActionAreaCard( {
     setRunning(!running);
   }
 
+  // this is for the drawer and chats
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    if (drawerOpen) {
+      setDrawerOpen(false);
+    }
+    else {
+      setDrawerOpen(true);
+    }
+  }
+
+  // const chatHistory = [
+  // ]
+  const [chatHistory, setChatHistory] = React.useState([]);
+  // const [questionHistory, setQuestionHistory] = React.useState([]);
+
+  // states for the chatbot
+  // this will be a generated question from the /prompt endpoint (input)
+  const [chatbotPrompt, setChatbotPrompt] = React.useState(`
+    What do you think about this article: ${text}?`
+  );
+
+  const [chatbotChoices, setChatbotChoices] = React.useState([]);
+
+  // need to pass persona from StartPage eventually
+  const [chatbotPersona, setChatbotPersona] = React.useState("Sarcastic Person");
+
+  // const [chatbotResponse, setChatbotResponse] = React.useState("");
+
+  const handleSubmitChatbot = async () => {
+    try {
+      setChatbotChoices([]);
+      console.log("Prompt: ", chatbotPrompt);
+      const res = await api.post("/chat", {
+        chat_history: chatHistory, 
+        new_persona: chatbotPersona, 
+        input: chatbotPrompt});
+      // setChatbotResponse(res.data.parsed);
+      // chatHistory.push(res.data.raw);
+      // https://stackoverflow.com/questions/26253351/correct-modification-of-state-arrays-in-react-js
+      setChatHistory(prevChatHistory => [...prevChatHistory, 
+        { role: "user", content: chatbotPrompt },
+        res.data.raw]);
+      console.log("Chat History array: ", chatHistory);
+      console.log("Chatbot History length: ", chatHistory.length);
+      console.log(res.data.parsed);
+      }
+    catch (error) {
+      console.error("Error submitting chatbot response:", error);
+    }
+  }
+
+  React.useEffect(() => {
+    async function generatePrompt() {
+      try {
+        const res = await api.post("/prompt", {chat_history: chatHistory});
+        setChatbotChoices(res.data.prompts);
+        console.log("Chatbot choices: ", res.data.prompts);
+      }
+      catch (error) {
+        console.error("Error getting prompts: ", error);
+      }
+    }
+    generatePrompt();
+  }, [chatHistory]);
 
   return (
-    <Card className="newspaper-card">
-        <CardHeader
-          title={title}
-          subheader={Date(date)}
-          action={
-            <IconButton onClick={handleAudio}>
-              <RecordVoiceOverIcon />
-            </IconButton>
-          }
-          sx={{ textAlign: 'center' }}
-        />
-        <CardMedia
-          component="img"
-          height="500"
-          image={imageURL}
-          alt="There should be a media image here..."
-        />
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row'
+      }}>
+      <Card className="newspaper-card">
+          <CardHeader
+            title={title}
+            subheader={Date(date)}
+            action={
+              <IconButton onClick={handleAudio}>
+                <RecordVoiceOverIcon />
+              </IconButton>
+            }
+            sx={{ textAlign: 'center' }}
+          />
+          <CardMedia
+            component="img"
+            height="500"
+            image={imageURL}
+            alt="There should be a media image here..."
+          />
 
-        <CardActionArea onClick={handleClickText}>
-          <CardContent className="story-card">
-            <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
-              {!showSummary ? "Original Article" : "AI-Summarized Article"}
-              <br/>
-              <br/>
-              {!showSummary ? text : summary}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-
-        <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'left' }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {source}
+          <CardActionArea onClick={handleClickText}>
+            <CardContent className="story-card">
+              <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
+                {!showSummary ? "Original Article" : "AI-Summarized Article"}
+                <br/>
+                <br/>
+                {!showSummary ? text : summary}
               </Typography>
-              <a href={url}>
-                <IconButton>
-                  <LinkIcon/>
-                </IconButton>
-              </a>
+            </CardContent>
+          </CardActionArea>
+
+          <CardContent>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'left' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {source}
+                </Typography>
+                <a href={url}>
+                  <IconButton>
+                    <LinkIcon/>
+                  </IconButton>
+                </a>
+              </Box>
+              <Box>
+              <IconButton onClick={handleClickOpen}>
+                <QuizIcon/>
+              </IconButton>
+              <IconButton onClick={handleDrawerOpen}>
+                <ForumIcon/>
+              </IconButton>
+              </Box>
             </Box>
-            <IconButton onClick={handleClickOpen}>
-              <QuizIcon/>
-            </IconButton>
-          </Box>
-        </CardContent>
+          </CardContent>
 
-      <Dialog onClose={handleClose} open={open}>
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Quick Quiz
-        </DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleClose}
-          sx={(theme) => ({
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: theme.palette.grey[500],
-          })}
-        >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent dividers>
-            <Typography gutterBottom>
-              {quizQuestion}
-            </Typography>
-            {/* <Typography gutterBottom>
-              Springfield
-            </Typography>
-            <Typography gutterBottom>
-              Cleveland
-            </Typography> */}
-            <Button onClick={() => handleButtonChoice("A")}>{quizChoices[0]}</Button>
-            <Button onClick={() => handleButtonChoice("B")}>{quizChoices[1]}</Button>
-            <Button onClick={() => handleButtonChoice("C")}>{quizChoices[2]}</Button>
-            <Typography gutterBottom>
-              {/* if ? then : elif ? then : else */}
-              {correct==="correct" ? "Correct!" : correct==="incorrect" ? "Incorrect!": ""}
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button autoFocus onClick={() => handleQuizAnswer(choice)}>
-              Submit answer
-            </Button>
-          </DialogActions>
+        <Dialog onClose={handleClose} open={open}>
+          <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+            Quick Quiz
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={(theme) => ({
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: theme.palette.grey[500],
+            })}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogContent dividers>
+              <Typography gutterBottom>
+                {quizQuestion}
+              </Typography>
+              {/* <Typography gutterBottom>
+                Springfield
+              </Typography>
+              <Typography gutterBottom>
+                Cleveland
+              </Typography> */}
+              <Button onClick={() => handleButtonChoice("A")}>{quizChoices[0]}</Button>
+              <Button onClick={() => handleButtonChoice("B")}>{quizChoices[1]}</Button>
+              <Button onClick={() => handleButtonChoice("C")}>{quizChoices[2]}</Button>
+              <Typography gutterBottom>
+                {/* if ? then : elif ? then : else */}
+                {correct==="correct" ? "Correct!" : correct==="incorrect" ? "Incorrect!": ""}
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={() => handleQuizAnswer(choice)}>
+                Submit answer
+              </Button>
+            </DialogActions>
+        </Dialog>
+      </Card>
 
-      </Dialog>
 
-    </Card>
+        {drawerOpen && (
+
+        <Box
+          sx={{
+            width: 400,
+            backgroundColor: "bisque",
+            color: "black",
+          }}>
+            <Card 
+            sx={{
+              width: "100%"
+            }}>
+              <CardHeader
+                title="Chatbot"
+                subheader="Welcome in!"
+              />
+              {chatHistory.map((message, index) => (
+                <Typography key={index} gutterBottom>
+                  {message.content}
+                </Typography>
+              ))}
+              <ButtonGroup variant="contained" aria-label="Basic button group">
+                {personas.map((person, index) => (
+                    <Button key={index} onClick={() => setChatbotPersona(person)} style={{
+                        backgroundColor: chatbotPersona === person ? "#BE5103" : "#165fc7"
+                    }}>{person}</Button>
+                ))}
+              </ButtonGroup>
+
+              {chatbotChoices && chatbotChoices.length > 0 && (
+              <ButtonGroup variant="contained" aria-label="Basic button group">
+                {chatbotChoices.map((choice, index) => (
+                    <Button key={index} onClick={() => setChatbotPrompt(choice)} style={{
+                        backgroundColor: chatbotPrompt === choice ? "#BE5103" : "#165fc7"
+                    }}>{choice}</Button>
+                ))}
+              </ButtonGroup>
+              )}
+
+              <Button onClick={handleSubmitChatbot}>
+                Submit Inquiry
+              </Button>
+            </Card>
+          <Divider
+          />
+        </Box>
+
+        )}
+    </Box>
   );
 }
 

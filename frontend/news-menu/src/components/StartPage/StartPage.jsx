@@ -12,6 +12,14 @@ import Alert from '@mui/material/Alert';
 
 
 function StartPage() {
+
+    const personas = [
+        "Middle Schooler",
+        "William Shakespeare",
+        "Conspiracy Theorist",
+        "Sarcastic Person"
+    ]
+
     const [persona, setPersona] = useState("");
     const [time, setTime] = useState(0);
     const [topic, setTopic] = useState("");
@@ -107,19 +115,11 @@ function StartPage() {
             </ButtonGroup>
             <h2>Who will your server be?</h2>
             <ButtonGroup variant="contained" aria-label="Basic button group">
-                {/* Source: used ChatGPT to generate some examples of personas */}
-                <Button onClick={() => handleButtonPersona("Middle Schooler")} style={{
-                    backgroundColor: persona === "Middle Schooler" ? "#BE5103" : "#165fc7"
-                }}>Middle Schooler</Button>
-                <Button onClick={() => handleButtonPersona("William Shakespeare")} style={{
-                    backgroundColor: persona === "William Shakespeare" ? "#BE5103" : "#165fc7"
-                }}>William Shakespeare</Button>
-                <Button onClick={() => handleButtonPersona("Conspiracy Theorist")} style={{
-                    backgroundColor: persona === "Conspiracy Theorist" ? "#BE5103" : "#165fc7"
-                }}>Conspiracy Theorist</Button>
-                <Button onClick={() => handleButtonPersona("Angry person")} style={{
-                    backgroundColor: persona === "Angry person" ? "#BE5103" : "#165fc7"
-                }}>Sarcastic Person</Button>
+                {personas.map((person, index) => (
+                    <Button key={index} onClick={() => handleButtonPersona(person)} style={{
+                        backgroundColor: persona === person ? "#BE5103" : "#165fc7"
+                    }}>{person}</Button>
+                ))}
             </ButtonGroup>
             <h2>Ready to order?</h2>
             {buttonLoading ? 
@@ -131,8 +131,9 @@ function StartPage() {
             <h2>{persona || "no one selected yet"}</h2>
             <h3>{summary || "no summary yet"}</h3> */}
             <div className="story-cards">
-                {articles.map((article) => (
+                {articles.map((article, index) => (
                     <Story 
+                        key={index}
                         title={article.title}
                         date={article.date}
                         text={article.text}

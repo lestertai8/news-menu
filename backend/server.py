@@ -159,6 +159,62 @@ def articles(body: ArticleCall):
     # obj.__dict__ converts the object to a dictionary?
     return {"news": [article.__dict__ for article in articles]}
 # --------------------------------
+# Chatbot
+
+class ChatCall(BaseModel):
+    chat_history: list
+    new_persona: str
+    input: str
+
+@app.post("/chat")
+def chat(body: ChatCall):
+    client = OpenAI()
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=body.chat_history + 
+        [{"role": "system", "content": f"""
+          You are now {body.new_persona}. 
+          Adjust your response accordingly. 
+          Keep your response to 2 sentences."""}] +
+        [{"role": "user", "content": body.input}],
+        temperature=0.5,
+        max_tokens=256,
+        top_p=1
+    )
+
+    msg = response.choices[0].message.content
+
+    return {
+        "raw": {"role": "assistant", "content": msg},
+        "parsed": msg
+    }
+# --------------------------------
+# Prompts for chatbot
+class PromptCall(BaseModel):
+    chat_history: list
+
+@app.post("/prompt")
+def prompt(body: PromptCall):
+    client = OpenAI()
+
+    class PromptOutput(BaseModel):
+        prompts: list[str]
+
+    response = client.beta.chat.completions.parse(
+        model="gpt-4o-mini",
+        messages=body.chat_history + 
+        [{"role": "system", "content": f"""
+          Create 3 follow-up questions given the chat history. 
+          Keep the questions brief and neutral, yet thought-provoking.
+          """}],
+        temperature=0.5,
+        max_tokens=256,
+        top_p=1,
+        response_format=PromptOutput
+    )
+
+    return response.choices[0].message.parsed
 
 
 # --------------------------------

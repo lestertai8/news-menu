@@ -23,13 +23,20 @@ Open a new terminal and cd into the repo again:
 
 `uvicorn server:app --reload`
 
-## After pushing changes
+## After making changes
 
 ### Back-end changes (root/backend)
+
+Push the changes.
 
 Wait 1-2 minutes for the Render server to update.
 
 ### Front-end changes (root/frontend/news-menu)
+
+In api.js, uncomment `baseURL: 'https://news-menu.onrender.com'`
+and comment out `baseURL: 'http://127.0.0.1:8000'`
+
+Push the changes.
 
 `npm run deploy`
 
