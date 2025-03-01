@@ -129,9 +129,7 @@ function ActionAreaCard( {
 
   // states for the chatbot
   // this will be a generated question from the /prompt endpoint (input)
-  const [chatbotPrompt, setChatbotPrompt] = React.useState(`
-    What do you think about this article: ${text}?`
-  );
+  const [chatbotPrompt, setChatbotPrompt] = React.useState("");
 
   const [chatbotChoices, setChatbotChoices] = React.useState([]);
 
@@ -145,7 +143,8 @@ function ActionAreaCard( {
       setChatbotChoices([]);
       console.log("Prompt: ", chatbotPrompt);
       const res = await api.post("/chat", {
-        chat_history: chatHistory, 
+        context: text,
+        chat_history: chatHistory.slice(-10), 
         new_persona: chatbotPersona, 
         input: chatbotPrompt});
       // setChatbotResponse(res.data.parsed);
@@ -166,7 +165,9 @@ function ActionAreaCard( {
   React.useEffect(() => {
     async function generatePrompt() {
       try {
-        const res = await api.post("/prompt", {chat_history: chatHistory});
+        const res = await api.post("/prompt", {
+          context: summary,
+          chat_history: chatHistory.slice(-10)});
         setChatbotChoices(res.data.prompts);
         console.log("Chatbot choices: ", res.data.prompts);
       }

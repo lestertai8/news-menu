@@ -160,8 +160,10 @@ def articles(body: ArticleCall):
     return {"news": [article.__dict__ for article in articles]}
 # --------------------------------
 # Chatbot
+# prompt engineering guide: https://help.openai.com/en/articles/6654000-best-practices-for-prompt-engineering-with-the-openai-api
 
 class ChatCall(BaseModel):
+    context: str
     chat_history: list
     new_persona: str
     input: str
@@ -174,9 +176,17 @@ def chat(body: ChatCall):
         model="gpt-4o-mini",
         messages=body.chat_history + 
         [{"role": "system", "content": f"""
+          ### Persona:
           You are now {body.new_persona}. 
-          Adjust your response accordingly. 
-          Keep your response to 2 sentences."""}] +
+          Adjust your response according to this persona. 
+
+          ### Task:
+          Keep your response to 2 sentences and respond in a way that encourages discussion and follow-up questions.
+          Since you are responding to the previous message, connect it to the previous message too.
+
+          ### Context:
+          Keep this for reference and cite a piece of it -- even if small -- in your response: {body.context}.
+          """}] +
         [{"role": "user", "content": body.input}],
         temperature=0.5,
         max_tokens=256,
@@ -192,6 +202,7 @@ def chat(body: ChatCall):
 # --------------------------------
 # Prompts for chatbot
 class PromptCall(BaseModel):
+    context: str
     chat_history: list
 
 @app.post("/prompt")
@@ -205,8 +216,10 @@ def prompt(body: PromptCall):
         model="gpt-4o-mini",
         messages=body.chat_history + 
         [{"role": "system", "content": f"""
-          Create 3 follow-up questions given the chat history. 
-          Keep the questions brief and neutral, yet thought-provoking.
+          Create 2 follow-up questions given the chat history and this text: {body.context}. 
+          Keep the questions very brief and neutral, yet thought-provoking.
+          Keep the question open-ended.
+          Prioritize making the question relevant to the previous "assistant" response.
           """}],
         temperature=0.5,
         max_tokens=256,
