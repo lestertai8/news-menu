@@ -29,6 +29,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ChatBubble from '../ChatBubble/ChatBubble.jsx';
 
 import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function ActionAreaCard( {
     title,
@@ -144,16 +145,19 @@ function ActionAreaCard( {
 
   const [fieldError, setFieldError] = React.useState(false);
   const [serverError, setServerError] = React.useState("");
+  const [buttonLoading, setButtonLoading] = React.useState(false);
 
   // https://stackoverflow.com/questions/37620694/how-to-scroll-to-bottom-in-react
   const messagesEndRef = React.useRef();
 
   const handleSubmitChatbot = async () => {
     try {
+      setButtonLoading(true);
       setServerError("");
       setFieldError(false);
       if (!chatbotPrompt || !chatbotPersona) {
         setFieldError(true);
+        setButtonLoading(false);
         return;
     }
       // setChatbotChoices([]);
@@ -171,6 +175,7 @@ function ActionAreaCard( {
       // https://stackoverflow.com/questions/26253351/correct-modification-of-state-arrays-in-react-js
       if (res.data) {
         setChatbotChoices([]);
+        setButtonLoading(false);
       }
       setChatHistory(prevChatHistory => [...prevChatHistory, 
         { role: "user", content: chatbotPrompt, persona: "user" },
@@ -180,8 +185,10 @@ function ActionAreaCard( {
       console.log("Chatbot History length: ", chatHistory.length);
       console.log(res.data.parsed);
       setChatbotPrompt("");
+      setButtonLoading(false);
       }
     catch (error) {
+      setButtonLoading(false);
       console.error("Error submitting chatbot response:", error);
       setServerError("Error submitting chatbot response. Try again.");
     }
@@ -417,9 +424,14 @@ function ActionAreaCard( {
               {/* <Button onClick={handleSubmitChatbot}>
                 Submit Inquiry
               </Button> */}
+              {/* {buttonLoading ? 
+            <CircularProgress /> :
+            <Button variant="contained" onClick={handleSubmit}>All ready!</Button>} */}
+              {buttonLoading ?
+              <CircularProgress /> : 
               <IconButton onClick={handleSubmitChatbot}>
                 <SendIcon/>
-              </IconButton>
+              </IconButton> }
             </Card>
           <Divider
           />
