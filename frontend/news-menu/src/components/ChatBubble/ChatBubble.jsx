@@ -13,12 +13,12 @@ function ChatBubble({ message, persona }) {
             alignSelf: 'flex-start',
         },
         "William Shakespeare": {
-            backgroundColor: 'blue',
+            backgroundColor: 'gray',
             color: 'white',
             alignSelf: 'flex-start',
         },
         "Conspiracy Theorist": {
-            backgroundColor: 'red',
+            backgroundColor: 'black',
             color: 'white',
             alignSelf: 'flex-start',
         },

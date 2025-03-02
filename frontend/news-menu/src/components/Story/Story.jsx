@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import QuizIcon from '@mui/icons-material/Quiz';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import ForumIcon from '@mui/icons-material/Forum';
+import SendIcon from '@mui/icons-material/Send';
 import { Icon } from '@mui/material';
 import "./Story.css";
 import api from "../../api.js";
@@ -223,8 +224,12 @@ function ActionAreaCard( {
 
           <CardActionArea onClick={handleClickText}>
             <CardContent className="story-card">
-              <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
-                {!showSummary ? "Original Article" : "AI-Summarized Article"}
+              <Typography gutterBottom variant="h5" component="div" 
+              sx={{ 
+                textAlign: 'left',
+                whiteSpace: 'pre-line',
+                }}>
+                {!showSummary ? "Original Article" : `AI-Summarized Article`}
                 <br/>
                 <br/>
                 {!showSummary ? text : summary}
@@ -319,6 +324,10 @@ function ActionAreaCard( {
                 sx={{
                   // maxHeight: "400px",
                   overflowY: "auto",
+                  maxHeight: "60vh",
+                  backgroundColor: "bisque",
+                  marginTop: "10px",
+                  paddingTop: "30px",
                 }}
                 >
                 {chatHistory.map((message, index) => (
@@ -364,9 +373,12 @@ function ActionAreaCard( {
               </ButtonGroup>
               )}
 
-              <Button onClick={handleSubmitChatbot}>
+              {/* <Button onClick={handleSubmitChatbot}>
                 Submit Inquiry
-              </Button>
+              </Button> */}
+              <IconButton onClick={handleSubmitChatbot}>
+                <SendIcon/>
+              </IconButton>
             </Card>
           <Divider
           />
