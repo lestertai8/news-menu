@@ -45,11 +45,13 @@ function StartPage() {
     }
 
     const [buttonLoading, setButtonLoading] = useState(false);
+    const [serverError, setServerError] = useState("");
 
     useEffect(() => {
         // once something renders, we can switch back from the loading button
         if (articles.length > 0) {
             setButtonLoading(false);
+            setServerError("");
         }
     }, [articles]);
 
@@ -65,10 +67,16 @@ function StartPage() {
                 setButtonLoading(true);
                 setArticles([]);
                 const res = await api.post("/articles", {category: topic, time: time, persona: persona});
-                setArticles(res.data.news);
-                setTime(0);
-                setTopic("");
-                setPersona("");
+                if (res.data.news.length === 0) {
+                    setServerError("Could not find any articles for your selection. Try again.");
+                    setButtonLoading(false);
+                }
+                else {
+                    setArticles(res.data.news);
+                    setTime(0);
+                    setTopic("");
+                    setPersona("");
+                }
                 // there's now an array of articles... we can parse each article and get the text, author, etc.
                 // https://stackoverflow.com/questions/69318193/how-to-use-map-in-react-to-create-multiple-component
     
@@ -83,6 +91,8 @@ function StartPage() {
                 // setSummary(response.data.summary);
             }
         } catch (error) {
+            setButtonLoading(false);
+            setServerError("There was an issue retrieving your articles. Try again. Request times out after 20 seconds.");
             console.error("Error getting articles:", error);
         }
     }
@@ -102,19 +112,27 @@ function StartPage() {
                 }}>3 minutes</Button> */}
             </ButtonGroup>
             <h2>What cuisine are you interested in?</h2>
-            <ButtonGroup variant="contained" aria-label="Basic button group">
+            <ButtonGroup variant="contained" aria-label="Basic button group"
+            sx={{
+                gap: "10px",
+            }}
+            >
                 <Button onClick={() => handleButtonTopic("tech")} style={{
                     backgroundColor: topic === "tech" ? "#BE5103" : "#165fc7"
                 }}>Tech</Button>
                 <Button onClick={() => handleButtonTopic("sports")} style={{
                     backgroundColor: topic === "sports" ? "#BE5103" : "#165fc7"
                 }}>Sports</Button>
-                <Button onClick={() => handleButtonTopic("food")} style={{
-                    backgroundColor: topic === "food" ? "#BE5103" : "#165fc7"
-                }}>Food</Button>
+                <Button onClick={() => handleButtonTopic("science")} style={{
+                    backgroundColor: topic === "science" ? "#BE5103" : "#165fc7"
+                }}>Science</Button>
             </ButtonGroup>
             <h2>Who will your server be?</h2>
-            <ButtonGroup variant="contained" aria-label="Basic button group">
+            <ButtonGroup variant="contained" aria-label="Basic button group"
+            sx={{
+                gap: "10px",
+            }}
+            >
                 {personas.map((person, index) => (
                     <Button key={index} onClick={() => handleButtonPersona(person)} style={{
                         backgroundColor: persona === person ? "#BE5103" : "#165fc7"
@@ -126,6 +144,7 @@ function StartPage() {
             <Button variant="contained" disabled className="loading-button">Loading...</Button> :
             <Button variant="contained" onClick={handleSubmit}>All ready!</Button>}
             {unfilledAlert && <Alert severity="error" className="alert">Please select a time, news topic, and persona.</Alert>}
+            {serverError && <Alert severity="error" className="alert">{serverError}</Alert>}
             {/* <h2>Original Text</h2>
             <h3>{text || "no text"}</h3>
             <h2>{persona || "no one selected yet"}</h2>

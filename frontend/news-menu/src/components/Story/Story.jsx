@@ -27,6 +27,8 @@ import DialogActions from '@mui/material/DialogActions';
 import CloseIcon from '@mui/icons-material/Close';
 import ChatBubble from '../ChatBubble/ChatBubble.jsx';
 
+import Alert from '@mui/material/Alert';
+
 function ActionAreaCard( {
     title,
     date,
@@ -135,12 +137,18 @@ function ActionAreaCard( {
   const [chatbotChoices, setChatbotChoices] = React.useState([]);
 
   // need to pass persona from StartPage eventually
-  const [chatbotPersona, setChatbotPersona] = React.useState("Sarcastic Person");
+  const [chatbotPersona, setChatbotPersona] = React.useState("");
 
   // const [chatbotResponse, setChatbotResponse] = React.useState("");
 
+  const [fieldError, setFieldError] = React.useState(false);
+
   const handleSubmitChatbot = async () => {
     try {
+      if (!chatbotPrompt || !chatbotPersona) {
+        setFieldError(true);
+        return;
+    }
       setChatbotChoices([]);
       console.log("Prompt: ", chatbotPrompt);
       const res = await api.post("/chat", {
@@ -170,6 +178,8 @@ function ActionAreaCard( {
   React.useEffect(() => {
     async function generatePrompt() {
       try {
+        setFieldError(false);
+        setChatbotPrompt("");
         const res = await api.post("/prompt", {
           context: summary,
           chat_history: chatHistory.slice(-10).map(message => ({
@@ -287,6 +297,7 @@ function ActionAreaCard( {
         <Box
           sx={{
             width: 400,
+            minWidth: "400px",
             backgroundColor: "bisque",
             color: "black",
           }}>
@@ -303,32 +314,52 @@ function ActionAreaCard( {
               }}}
                 title="Roundtable Talk"
                 subheader="Welcome in!"
-              />
+                />
               <Box
                 sx={{
                   // maxHeight: "400px",
                   overflowY: "auto",
                 }}
-              >
+                >
                 {chatHistory.map((message, index) => (
                   <ChatBubble key={index} message={message.content} persona={message.persona} />
                 ))}
-              </Box>
+                </Box>
+                {fieldError && <Alert severity="error" className="alert">Please select a persona and prompt.</Alert>}
 
-              <ButtonGroup variant="contained" aria-label="Basic button group">
+              <ButtonGroup variant="contained" aria-label="Basic button group"
+              disableElevation
+              sx={{
+                padding: "10px",
+                margin: "10px",
+                gap: "10px",
+                display: "flex",
+                justifyContent: "center",
+                flexWrap: "wrap",
+              }}
+              >
                 {personas.map((person, index) => (
-                    <Button key={index} onClick={() => setChatbotPersona(person)} style={{
-                        backgroundColor: chatbotPersona === person ? "#BE5103" : "#165fc7"
-                    }}>{person}</Button>
+                  <Button key={index} onClick={() => setChatbotPersona(person)} style={{
+                    backgroundColor: chatbotPersona === person ? "#BE5103" : "#165fc7"
+                  }}>{person}</Button>
                 ))}
               </ButtonGroup>
 
               {chatbotChoices && chatbotChoices.length > 0 && (
-              <ButtonGroup variant="contained" aria-label="Basic button group">
+                <ButtonGroup variant="contained" aria-label="Basic button group"
+                disableElevation
+                sx={{
+                  padding: "10px",
+                  margin: "10px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+                >
                 {chatbotChoices.map((choice, index) => (
-                    <Button key={index} onClick={() => setChatbotPrompt(choice)} style={{
-                        backgroundColor: chatbotPrompt === choice ? "#BE5103" : "#165fc7"
-                    }}>{choice}</Button>
+                  <Button key={index} onClick={() => setChatbotPrompt(choice)} style={{
+                    backgroundColor: chatbotPrompt === choice ? "#BE5103" : "#165fc7",
+                    textTransform: "none",
+                  }}>{choice}</Button>
                 ))}
               </ButtonGroup>
               )}
