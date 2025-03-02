@@ -25,6 +25,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import CloseIcon from '@mui/icons-material/Close';
+import ChatBubble from '../ChatBubble/ChatBubble.jsx';
 
 function ActionAreaCard( {
     title,
@@ -144,15 +145,19 @@ function ActionAreaCard( {
       console.log("Prompt: ", chatbotPrompt);
       const res = await api.post("/chat", {
         context: text,
-        chat_history: chatHistory.slice(-10), 
+        chat_history: chatHistory.slice(-10).map(message => ({
+          role: message.role,
+          content: message.content
+        })), 
         new_persona: chatbotPersona, 
         input: chatbotPrompt});
       // setChatbotResponse(res.data.parsed);
       // chatHistory.push(res.data.raw);
       // https://stackoverflow.com/questions/26253351/correct-modification-of-state-arrays-in-react-js
       setChatHistory(prevChatHistory => [...prevChatHistory, 
-        { role: "user", content: chatbotPrompt },
-        res.data.raw]);
+        { role: "user", content: chatbotPrompt, persona: "user" },
+        { role: "assistant", content: res.data.parsed, persona: chatbotPersona }
+      ]);
       console.log("Chat History array: ", chatHistory);
       console.log("Chatbot History length: ", chatHistory.length);
       console.log(res.data.parsed);
@@ -167,7 +172,11 @@ function ActionAreaCard( {
       try {
         const res = await api.post("/prompt", {
           context: summary,
-          chat_history: chatHistory.slice(-10)});
+          chat_history: chatHistory.slice(-10).map(message => ({
+            role: message.role,
+            content: message.content
+          })), 
+        });
         setChatbotChoices(res.data.prompts);
         console.log("Chatbot choices: ", res.data.prompts);
       }
@@ -256,12 +265,6 @@ function ActionAreaCard( {
               <Typography gutterBottom>
                 {quizQuestion}
               </Typography>
-              {/* <Typography gutterBottom>
-                Springfield
-              </Typography>
-              <Typography gutterBottom>
-                Cleveland
-              </Typography> */}
               <Button onClick={() => handleButtonChoice("A")}>{quizChoices[0]}</Button>
               <Button onClick={() => handleButtonChoice("B")}>{quizChoices[1]}</Button>
               <Button onClick={() => handleButtonChoice("C")}>{quizChoices[2]}</Button>
@@ -278,7 +281,7 @@ function ActionAreaCard( {
         </Dialog>
       </Card>
 
-
+      {/* Chatbot */}
         {drawerOpen && (
 
         <Box
@@ -292,14 +295,26 @@ function ActionAreaCard( {
               width: "100%"
             }}>
               <CardHeader
-                title="Chatbot"
+              sx={{
+                '& .MuiCardHeader-title': {
+                  fontFamily: "Times New Roman",
+                  fontSize: "30px",
+                  fontWeight: "bold",
+              }}}
+                title="Roundtable Talk"
                 subheader="Welcome in!"
               />
-              {chatHistory.map((message, index) => (
-                <Typography key={index} gutterBottom>
-                  {message.content}
-                </Typography>
-              ))}
+              <Box
+                sx={{
+                  // maxHeight: "400px",
+                  overflowY: "auto",
+                }}
+              >
+                {chatHistory.map((message, index) => (
+                  <ChatBubble key={index} message={message.content} persona={message.persona} />
+                ))}
+              </Box>
+
               <ButtonGroup variant="contained" aria-label="Basic button group">
                 {personas.map((person, index) => (
                     <Button key={index} onClick={() => setChatbotPersona(person)} style={{

@@ -93,13 +93,13 @@ function StartPage() {
             <ButtonGroup variant="contained" aria-label="Basic button group">
                 <Button onClick={() => handleButtonTime(1)} style={{
                     backgroundColor: time === 1 ? "#BE5103" : "#165fc7"
-                }}>1 minute</Button>
-                <Button onClick={() => handleButtonTime(2)} style={{
+                }}>Short</Button>
+                {/* <Button onClick={() => handleButtonTime(2)} style={{
                     backgroundColor: time === 2 ? "#BE5103" : "#165fc7"
                 }}>2 minutes</Button>
                 <Button onClick={() => handleButtonTime(3)} style={{
                     backgroundColor: time === 3 ? "#BE5103" : "#165fc7"
-                }}>3 minutes</Button>
+                }}>3 minutes</Button> */}
             </ButtonGroup>
             <h2>What cuisine are you interested in?</h2>
             <ButtonGroup variant="contained" aria-label="Basic button group">
