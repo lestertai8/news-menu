@@ -26,10 +26,10 @@ app = FastAPI()
 
 # this is the url of the frontend
 origins = [
+    "https://lestertai8.github.io",
     "http://localhost:5173",
     "http://localhost:5174",
-    "http://localhost:5175",
-    "https://lestertai8.github.io"
+    "http://localhost:5175"
 ]
 
 # if this doesn't work, use allow_origins=["*"]
