@@ -6,6 +6,8 @@ import api from "../../api.js";
 import Story from "../Story/Story.jsx";
 import Alert from '@mui/material/Alert';
 
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 // tutorial on audio in react app
 // https://www.youtube.com/watch?v=U1T_J6Odoqg
@@ -73,9 +75,9 @@ function StartPage() {
                 }
                 else {
                     setArticles(res.data.news);
-                    setTime(0);
-                    setTopic("");
-                    setPersona("");
+                    // setTime(0);
+                    // setTopic("");
+                    // setPersona("");
                 }
                 // there's now an array of articles... we can parse each article and get the text, author, etc.
                 // https://stackoverflow.com/questions/69318193/how-to-use-map-in-react-to-create-multiple-component
@@ -141,7 +143,7 @@ function StartPage() {
             </ButtonGroup>
             <h2>Ready to order?</h2>
             {buttonLoading ? 
-            <Button variant="contained" disabled className="loading-button">Loading...</Button> :
+            <CircularProgress /> :
             <Button variant="contained" onClick={handleSubmit}>All ready!</Button>}
             {unfilledAlert && <Alert severity="error" className="alert">Please select a time, news topic, and persona.</Alert>}
             {serverError && <Alert severity="error" className="alert">{serverError}</Alert>}

@@ -143,14 +143,20 @@ function ActionAreaCard( {
   // const [chatbotResponse, setChatbotResponse] = React.useState("");
 
   const [fieldError, setFieldError] = React.useState(false);
+  const [serverError, setServerError] = React.useState("");
+
+  // https://stackoverflow.com/questions/37620694/how-to-scroll-to-bottom-in-react
+  const messagesEndRef = React.useRef();
 
   const handleSubmitChatbot = async () => {
     try {
+      setServerError("");
+      setFieldError(false);
       if (!chatbotPrompt || !chatbotPersona) {
         setFieldError(true);
         return;
     }
-      setChatbotChoices([]);
+      // setChatbotChoices([]);
       console.log("Prompt: ", chatbotPrompt);
       const res = await api.post("/chat", {
         context: text,
@@ -163,6 +169,9 @@ function ActionAreaCard( {
       // setChatbotResponse(res.data.parsed);
       // chatHistory.push(res.data.raw);
       // https://stackoverflow.com/questions/26253351/correct-modification-of-state-arrays-in-react-js
+      if (res.data) {
+        setChatbotChoices([]);
+      }
       setChatHistory(prevChatHistory => [...prevChatHistory, 
         { role: "user", content: chatbotPrompt, persona: "user" },
         { role: "assistant", content: res.data.parsed, persona: chatbotPersona }
@@ -173,14 +182,13 @@ function ActionAreaCard( {
       }
     catch (error) {
       console.error("Error submitting chatbot response:", error);
+      setServerError("Error submitting chatbot response. Try again.");
     }
   }
 
   React.useEffect(() => {
     async function generatePrompt() {
       try {
-        setFieldError(false);
-        setChatbotPrompt("");
         const res = await api.post("/prompt", {
           context: summary,
           chat_history: chatHistory.slice(-10).map(message => ({
@@ -195,8 +203,29 @@ function ActionAreaCard( {
         console.error("Error getting prompts: ", error);
       }
     }
+    async function scrollToBottom() {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
     generatePrompt();
+    scrollToBottom();
   }, [chatHistory]);
+
+  // const generatePrompt = async () => {
+  //   try {
+  //     const res = await api.post("/prompt", {
+  //       context: summary,
+  //       chat_history: chatHistory.slice(-10).map(message => ({
+  //         role: message.role,
+  //         content: message.content
+  //       })), 
+  //     });
+  //     setChatbotChoices(res.data.prompts);
+  //     console.log("Chatbot choices: ", res.data.prompts);
+  //   }
+  //   catch (error) {
+  //     console.error("Error getting prompts: ", error);
+  //   }
+  // }
 
   return (
     <Box
@@ -333,45 +362,56 @@ function ActionAreaCard( {
                 {chatHistory.map((message, index) => (
                   <ChatBubble key={index} message={message.content} persona={message.persona} />
                 ))}
+                <div ref={messagesEndRef}></div>
                 </Box>
                 {fieldError && <Alert severity="error" className="alert">Please select a persona and prompt.</Alert>}
+                {serverError && <Alert severity="error" className="alert">{serverError}</Alert>}
+              <Box>
+                <Typography variant="h6" sx={{ textAlign: "center" }}>
+                  Ask a question!
+                </Typography>
+                {chatbotChoices && chatbotChoices.length > 0 && (
+                  <ButtonGroup variant="contained" aria-label="Basic button group"
+                  disableElevation
+                  sx={{
+                    padding: "10px",
+                    margin: "10px",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                  >
+                  {chatbotChoices.map((choice, index) => (
+                    <Button key={index} onClick={() => setChatbotPrompt(choice)} style={{
+                      backgroundColor: chatbotPrompt === choice ? "#BE5103" : "#165fc7",
+                      textTransform: "none",
+                    }}>{choice}</Button>
+                  ))}
+                </ButtonGroup>
+                )}
+              </Box>
 
-              <ButtonGroup variant="contained" aria-label="Basic button group"
-              disableElevation
-              sx={{
-                padding: "10px",
-                margin: "10px",
-                gap: "10px",
-                display: "flex",
-                justifyContent: "center",
-                flexWrap: "wrap",
-              }}
-              >
-                {personas.map((person, index) => (
-                  <Button key={index} onClick={() => setChatbotPersona(person)} style={{
-                    backgroundColor: chatbotPersona === person ? "#BE5103" : "#165fc7"
-                  }}>{person}</Button>
-                ))}
-              </ButtonGroup>
-
-              {chatbotChoices && chatbotChoices.length > 0 && (
+              <Box>
+                <Typography variant="h6" sx={{ textAlign: "center" }}>
+                  Who will answer?
+                </Typography>
                 <ButtonGroup variant="contained" aria-label="Basic button group"
                 disableElevation
                 sx={{
                   padding: "10px",
                   margin: "10px",
+                  gap: "10px",
                   display: "flex",
                   justifyContent: "center",
+                  flexWrap: "wrap",
                 }}
                 >
-                {chatbotChoices.map((choice, index) => (
-                  <Button key={index} onClick={() => setChatbotPrompt(choice)} style={{
-                    backgroundColor: chatbotPrompt === choice ? "#BE5103" : "#165fc7",
-                    textTransform: "none",
-                  }}>{choice}</Button>
-                ))}
-              </ButtonGroup>
-              )}
+                  {personas.map((person, index) => (
+                    <Button key={index} onClick={() => setChatbotPersona(person)} style={{
+                      backgroundColor: chatbotPersona === person ? "#BE5103" : "#165fc7"
+                    }}>{person}</Button>
+                  ))}
+                </ButtonGroup>
+                </Box>
 
               {/* <Button onClick={handleSubmitChatbot}>
                 Submit Inquiry
