@@ -179,6 +179,7 @@ function ActionAreaCard( {
       console.log("Chat History array: ", chatHistory);
       console.log("Chatbot History length: ", chatHistory.length);
       console.log(res.data.parsed);
+      setChatbotPrompt("");
       }
     catch (error) {
       console.error("Error submitting chatbot response:", error);
