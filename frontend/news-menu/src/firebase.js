@@ -4,6 +4,7 @@ import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, signInWithPopup, GoogleAuthProvider, setPersistence, browserSessionPersistence, onAuthStateChanged, signOut } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -22,5 +23,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
+// -------------------------------------------------
 // EXPORTS
+// -------------------------------------------------
 export const db = getFirestore(app);
+
+// authentication
+export const auth = getAuth(app);
+export const provider = new GoogleAuthProvider();
+export { onAuthStateChanged, signOut };
+
+// Reused from firebase.js file here: https://github.com/394-w25/CourseBuddy/tree/master
+export const signInWithGoogle = async () => {
+  try {
+    await setPersistence(auth, browserSessionPersistence);
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user
+    return (user);
+  } catch (error) {
+    console.error("Error with Google sign-in: ", error);
+  }
+}

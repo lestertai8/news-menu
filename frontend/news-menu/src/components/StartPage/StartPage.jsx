@@ -13,7 +13,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 // https://www.youtube.com/watch?v=U1T_J6Odoqg
 
 
-function StartPage() {
+function StartPage({userPersonas}) {
 
     const personas = [
         "Middle Schooler",
@@ -155,6 +155,7 @@ function StartPage() {
                 {articles.map((article, index) => (
                     <Story 
                         key={index}
+                        userPersonas={userPersonas}
                         title={article.title}
                         date={article.date}
                         text={article.text}

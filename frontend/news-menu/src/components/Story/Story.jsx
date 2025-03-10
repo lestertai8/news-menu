@@ -32,6 +32,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 
 function ActionAreaCard( {
+    userPersonas,
     title,
     date,
     text,
@@ -53,6 +54,8 @@ function ActionAreaCard( {
 
   // console.log("Quiz choices: " + quizChoices);
   // console.log("Quiz answer: " + quizAnswer);
+
+  // console.log("story retrieved user: ", user);
 
   // this determines if the summary is shown as opposed to the original text
   const [showSummary, setShowSummary] = React.useState(true);
@@ -420,6 +423,27 @@ function ActionAreaCard( {
                     <Button key={index} onClick={() => setChatbotPersona(person)} style={{
                       backgroundColor: chatbotPersona === person ? "#BE5103" : "#165fc7"
                     }}>{person}</Button>
+                  ))}
+                </ButtonGroup>
+
+                <Typography gutterBottom variant="h6" sx={{ textAlign: "center" }}>
+                  Your custom personas!
+                </Typography>
+                <ButtonGroup variant="contained" aria-label="Basic button group"
+                disableElevation
+                sx={{
+                  padding: "10px",
+                  margin: "10px",
+                  gap: "10px",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                }}
+                >
+                  {userPersonas.map((person, index) => (
+                    <Button key={index} onClick={() => setChatbotPersona(person.name)} style={{
+                      backgroundColor: chatbotPersona === person.name ? "#BE5103" : "#165fc7"
+                    }}>{person.name}</Button>
                   ))}
                 </ButtonGroup>
                 </Box>

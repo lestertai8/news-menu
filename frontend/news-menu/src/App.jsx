@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -6,9 +6,25 @@ import StartPage from './components/StartPage/StartPage';
 import AppBar from './components/AppBar/AppBar';
 import Story from './components/Story/Story';
 import CreatePersona from './components/CreatePersona/CreatePersona';
+import SignIn from './components/SignIn/SignIn';
+import { auth, onAuthStateChanged } from "./firebase";
+// import CircularProgress from '@mui/material/CircularProgress';
 
 function App() {
-  const [count, setCount] = useState(0)
+  // const [count, setCount] = useState(0)
+  const [user, setUser] = useState(null);
+  const [gettingUser, setGettingUser] = useState(true);
+  const [userPersonas, setUserPersonas] = useState([]);
+
+  // Source: Asked Google AI search: "onauthstatechanged firebase react"
+  useEffect(() => {
+    const load = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setGettingUser(false);
+      // console.log("loaded user from previous session: ", user);
+    });
+    return () => load();
+  }, []);
 
   return (
     // <>
@@ -33,19 +49,21 @@ function App() {
     //     Click on the Vite and React logos to learn more
     //   </p>
     // </>
-    <div className="app-content">
-      <AppBar/>
-      <CreatePersona/>
-      <StartPage/>
-      {/* <Story
-        title="Title"
-        date="June 1, 2024"
-        text="Once upon a time there were 3 little piggies. One day, a big bad wolf came along and blew them down."
-        imageURL="https://picsum.photos/200"
-        url="https://google.com"
-        source="Google"
-      /> */}
-    </div>
+
+    <>
+      {!gettingUser && (
+        <div className="app-content" style={{marginLeft: "300px"}}>
+          <AppBar user={user} setUser={setUser}/>
+          {!user ? (
+          <SignIn setUser={setUser} />) : (
+          <div>
+            <CreatePersona user={user} userPersonas={userPersonas} setUserPersonas={setUserPersonas}/>
+            <StartPage userPersonas={userPersonas}/>
+          </div>
+          )}
+        </div>
+      )}
+    </>
   )
 }
 
