@@ -13,6 +13,7 @@ import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function CreatePersona({ user, userPersonas, setUserPersonas }) {
 
@@ -22,6 +23,7 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
     const [submitted, setSubmitted] = React.useState(false);
 
     const [drawerOpen, setDrawerOpen] = React.useState(true);
+    const [isLoading, setIsLoading] = React.useState(false);
 
 
 
@@ -67,6 +69,8 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                 return;
             }
 
+            setIsLoading(true);
+
             const collectionRef = collection(db, "personas");
 
             const customPersona = {
@@ -79,6 +83,7 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
             console.log("Added new persona");
             setMissingFields(false);
             setSubmitted(true);
+            setIsLoading(false);
 
             // clear the textboxes
             setName("");
@@ -159,8 +164,9 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                         maxLength: 500,
                     }}
                     />
+                {isLoading ? (<CircularProgress />) : (
                 <Button onClick={handleCreatePersona} variant="contained">Add Persona</Button>
-                
+                )}
 
                 <Box sx={{
                     overflow: 'auto',
