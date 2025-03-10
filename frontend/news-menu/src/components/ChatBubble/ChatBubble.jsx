@@ -12,11 +12,6 @@ function ChatBubble({ message, persona }) {
             color: 'white',
             alignSelf: 'flex-start',
         },
-        "William Shakespeare": {
-            backgroundColor: 'gray',
-            color: 'white',
-            alignSelf: 'flex-start',
-        },
         "Professor": {
             backgroundColor: 'black',
             color: 'white',
@@ -59,7 +54,7 @@ function ChatBubble({ message, persona }) {
                 // color: 'white',
                 ...personaCSS[persona],
                 borderRadius: '10px',
-                padding: '10px',
+                padding: '12px',
                 marginLeft: '10px',
                 marginRight: '10px',
                 marginBottom: '10px',

@@ -6,9 +6,13 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Drawer from '@mui/material/Drawer';
+import Box from '@mui/material/Box';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 
 function CreatePersona({ user, userPersonas, setUserPersonas }) {
 
@@ -115,12 +119,20 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
             sx={{
                 width: 300,
                 flexShrink: 0,
+                // height: '100vh',
+
                 '& .MuiDrawer-paper': {
                     width: 300,
+                    // height: '100vh',
                     boxSizing: 'border-box',
+                    backgroundColor: 'bisque',
+                    paddingTop: '20px',
+                    // paddingLeft: '5px',
+                    // paddingRight: '5px',
                 },
             }}
             >
+                <h2>Create and save a custom persona</h2>
                 <TextField
                     onChange={(e) => setName(e.target.value)}
                     value={name}
@@ -128,6 +140,9 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                     sx={{
                         backgroundColor: 'white',
                         borderRadius: '5px',
+                    }}
+                    inputProps={{
+                        maxLength: 50,
                     }}
                     />
                 <TextField
@@ -140,21 +155,41 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                         backgroundColor: 'white',
                         borderRadius: '5px',
                     }}
+                    inputProps={{
+                        maxLength: 500,
+                    }}
                     />
                 <Button onClick={handleCreatePersona} variant="contained">Add Persona</Button>
+                
+
+                <Box sx={{
+                    overflow: 'auto',
+                    maxHeight: '70vh',
+                }}>
+                    {userPersonas.map((persona, index) => (
+                        <Card key={index} sx={{
+                            marginBottom: '30px',
+                            marginTop: '30px',
+                        }}>
+                            <CardHeader
+                                title={persona.name}
+                                sx={{
+                                    backgroundColor: 'black',
+                                    color: 'white',
+                                }}
+                                />
+                            <CardContent>
+                                <Typography gutterBottom>{persona.description}</Typography>
+                            </CardContent>
+                            {/* <Button onClick={() => handleRemovePersona(persona.id)} variant="contained">Remove</Button> */}
+                            <IconButton onClick={() => handleRemovePersona(persona.id)}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </Card>
+                    ))}
+                </Box>
                 {submitted && <Alert severity="success">Successfully created a custom persona!</Alert>}
                 {missingFields && <Alert severity="error" className="alert">Please fill out the name and description.</Alert>}
-
-                {userPersonas.map((persona, index) => (
-                    <Card key={index}>
-                        <h2>{persona.name}</h2>
-                        <p>{persona.description}</p>
-                        {/* <Button onClick={() => handleRemovePersona(persona.id)} variant="contained">Remove</Button> */}
-                        <IconButton onClick={() => handleRemovePersona(persona.id)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Card>
-                ))}
             </Drawer>
         </div>
     );

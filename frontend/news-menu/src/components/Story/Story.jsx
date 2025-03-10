@@ -30,6 +30,11 @@ import ChatBubble from '../ChatBubble/ChatBubble.jsx';
 
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
 
 function ActionAreaCard( {
     userPersonas,
@@ -155,6 +160,7 @@ function ActionAreaCard( {
   const [chatbotPrompt, setChatbotPrompt] = React.useState("");
 
   const [chatbotChoices, setChatbotChoices] = React.useState([]);
+  const [showChoices, setShowChoices] = React.useState(false);
 
   // need to pass persona from StartPage eventually
   const [chatbotPersona, setChatbotPersona] = React.useState("");
@@ -167,6 +173,14 @@ function ActionAreaCard( {
 
   // https://stackoverflow.com/questions/37620694/how-to-scroll-to-bottom-in-react
   const messagesEndRef = React.useRef();
+
+  // https://stackoverflow.com/questions/67578008/how-to-get-value-from-material-ui-textfield-after-pressing-enter
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSubmitChatbot();
+      e.preventDefault();
+    }
+  }
 
   const handleSubmitChatbot = async () => {
     try {
@@ -400,23 +414,55 @@ function ActionAreaCard( {
                 <Typography variant="h6" sx={{ textAlign: "center" }}>
                   Ask a question!
                 </Typography>
-                {chatbotChoices && chatbotChoices.length > 0 && (
-                  <ButtonGroup variant="contained" aria-label="Basic button group"
-                  disableElevation
-                  sx={{
-                    padding: "10px",
-                    margin: "10px",
-                    display: "flex",
-                    justifyContent: "center",
+                <TextField
+                  inputProps={{
+                    maxLength: 300
                   }}
-                  >
+                  onChange={(e) => setChatbotPrompt(e.target.value)}
+                  value={chatbotPrompt}
+                  multiline
+                  onFocus={() => setShowChoices(true)}
+                  onBlur={() => setShowChoices(false)}
+                  onKeyPress={onKeyPress}
+                  sx={{
+                    borderRadius: '5px',
+                    width: "90%",
+                  }}
+                  />
+                {showChoices && chatbotChoices && chatbotChoices.length > 0 && (
+                //   <ButtonGroup variant="contained" aria-label="Basic button group"
+                //   disableElevation
+                //   sx={{
+                //     padding: "10px",
+                //     margin: "10px",
+                //     display: "flex",
+                //     justifyContent: "center",
+                //   }}
+                //   >
+                //   {chatbotChoices.map((choice, index) => (
+                //     <Button key={index} onClick={() => setChatbotPrompt(choice)} style={{
+                //       // backgroundColor: chatbotPrompt === choice ? "#BE5103" : "#165fc7",
+                //       backgroundColor: "#165fc7",
+                //       textTransform: "none",
+                //     }}>{choice}</Button>
+                //   ))}
+                // </ButtonGroup>
+                <List>
                   {chatbotChoices.map((choice, index) => (
-                    <Button key={index} onClick={() => setChatbotPrompt(choice)} style={{
-                      backgroundColor: chatbotPrompt === choice ? "#BE5103" : "#165fc7",
-                      textTransform: "none",
-                    }}>{choice}</Button>
+                    <ListItem>
+                      {/* have to use mousedown here or else textfield cries about it */}
+                      <ListItemButton key={index} onMouseDown={() => setChatbotPrompt(choice)} sx={{
+                        fontSize: "14px",
+                        color: "gray",
+                        border: "1px solid gray",
+                        borderRadius: "10px",
+                        // backgroundColor: chatbotPrompt === choice ? "#BE5103" : "#165fc7",
+                        // backgroundColor: "#165fc7",
+                        // textTransform: "none",
+                      }}>{choice}</ListItemButton>
+                    </ListItem>
                   ))}
-                </ButtonGroup>
+                </List>
                 )}
               </Box>
 
@@ -436,7 +482,7 @@ function ActionAreaCard( {
                 }}
                 >
                   {personas.map((person, index) => (
-                    <Button key={index} onClick={() => setChatbotPersona(person)} style={{
+                    <Button key={index} onMouseDown={() => setChatbotPersona(person)} style={{
                       backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#165fc7"
                     }}>{person.name}</Button>
                   ))}
@@ -457,7 +503,7 @@ function ActionAreaCard( {
                 }}
                 >
                   {userPersonas.map((person, index) => (
-                    <Button key={index} onClick={() => setChatbotPersona(person)} style={{
+                    <Button key={index} onMouseDown={() => setChatbotPersona(person)} style={{
                       backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#165fc7"
                     }}>{person.name}</Button>
                   ))}
@@ -472,7 +518,7 @@ function ActionAreaCard( {
             <Button variant="contained" onClick={handleSubmit}>All ready!</Button>} */}
               {buttonLoading ?
               <CircularProgress /> : 
-              <IconButton onClick={handleSubmitChatbot}>
+              <IconButton onMouseDown={handleSubmitChatbot}>
                 <SendIcon/>
               </IconButton> }
             </Card>
