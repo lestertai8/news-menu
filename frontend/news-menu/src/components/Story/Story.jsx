@@ -45,12 +45,27 @@ function ActionAreaCard( {
     quizAnswer
 }) {
 
+//   const personas = [
+//     "Middle Schooler",
+//     "William Shakespeare",
+//     "Conspiracy Theorist",
+//     "Sarcastic Person"
+// ]
+
   const personas = [
-    "Middle Schooler",
-    "William Shakespeare",
-    "Conspiracy Theorist",
-    "Sarcastic Person"
-]
+    {
+      name: "Middle Schooler",
+      description: "Uses simple language and has limited vocabulary."
+    },
+    {
+      name: "College Student",
+      description: "Uses advanced vocabulary. Is very progressive."
+    },
+    {
+      name: "Professor",
+      description: "Uses a lot of jargon and is a very interdisciplinary thinker."
+    }
+  ]
 
   // console.log("Quiz choices: " + quizChoices);
   // console.log("Quiz answer: " + quizAnswer);
@@ -171,7 +186,8 @@ function ActionAreaCard( {
           role: message.role,
           content: message.content
         })), 
-        new_persona: chatbotPersona, 
+        new_persona: chatbotPersona.name, 
+        new_persona_description: chatbotPersona.description,
         input: chatbotPrompt});
       // setChatbotResponse(res.data.parsed);
       // chatHistory.push(res.data.raw);
@@ -182,7 +198,7 @@ function ActionAreaCard( {
       }
       setChatHistory(prevChatHistory => [...prevChatHistory, 
         { role: "user", content: chatbotPrompt, persona: "user" },
-        { role: "assistant", content: res.data.parsed, persona: chatbotPersona }
+        { role: "assistant", content: res.data.parsed, persona: chatbotPersona.name }
       ]);
       console.log("Chat History array: ", chatHistory);
       console.log("Chatbot History length: ", chatHistory.length);
@@ -421,8 +437,8 @@ function ActionAreaCard( {
                 >
                   {personas.map((person, index) => (
                     <Button key={index} onClick={() => setChatbotPersona(person)} style={{
-                      backgroundColor: chatbotPersona === person ? "#BE5103" : "#165fc7"
-                    }}>{person}</Button>
+                      backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#165fc7"
+                    }}>{person.name}</Button>
                   ))}
                 </ButtonGroup>
 
@@ -441,8 +457,8 @@ function ActionAreaCard( {
                 }}
                 >
                   {userPersonas.map((person, index) => (
-                    <Button key={index} onClick={() => setChatbotPersona(person.name)} style={{
-                      backgroundColor: chatbotPersona === person.name ? "#BE5103" : "#165fc7"
+                    <Button key={index} onClick={() => setChatbotPersona(person)} style={{
+                      backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#165fc7"
                     }}>{person.name}</Button>
                   ))}
                 </ButtonGroup>

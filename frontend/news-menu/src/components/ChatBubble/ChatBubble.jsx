@@ -17,12 +17,12 @@ function ChatBubble({ message, persona }) {
             color: 'white',
             alignSelf: 'flex-start',
         },
-        "Conspiracy Theorist": {
+        "Professor": {
             backgroundColor: 'black',
             color: 'white',
             alignSelf: 'flex-start',
         },
-        "Sarcastic Person": {
+        "College Student": {
             backgroundColor: 'orange',
             color: 'white',
             alignSelf: 'flex-start',

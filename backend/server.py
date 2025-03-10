@@ -166,6 +166,7 @@ class ChatCall(BaseModel):
     context: str
     chat_history: list
     new_persona: str
+    new_persona_description: str
     input: str
 
 @app.post("/chat")
@@ -178,6 +179,7 @@ def chat(body: ChatCall):
         [{"role": "system", "content": f"""
           ### Persona:
           You are now {body.new_persona}. 
+          Here's a description: {body.new_persona_description}
           Adjust your response according to this persona. 
 
           ### Task:
