@@ -15,12 +15,27 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 function StartPage({userPersonas}) {
 
+    // const personas = [
+    //     "Middle Schooler",
+    //     "William Shakespeare",
+    //     "Conspiracy Theorist",
+    //     "Sarcastic Person"
+    // ]
+
     const personas = [
-        "Middle Schooler",
-        "William Shakespeare",
-        "Conspiracy Theorist",
-        "Sarcastic Person"
-    ]
+        {
+          name: "Middle Schooler",
+          description: "Uses simple language and has limited vocabulary."
+        },
+        {
+          name: "College Student",
+          description: "Uses advanced vocabulary. Is very progressive."
+        },
+        {
+          name: "Professor",
+          description: "Uses a lot of jargon and is a very interdisciplinary thinker."
+        }
+      ]
 
     const [persona, setPersona] = useState("");
     const [time, setTime] = useState(0);
@@ -68,7 +83,7 @@ function StartPage({userPersonas}) {
                 // button begins to load
                 setButtonLoading(true);
                 setArticles([]);
-                const res = await api.post("/articles", {category: topic, time: time, persona: persona});
+                const res = await api.post("/articles", {category: topic, time: time, persona: persona.name, persona_description: persona.description});
                 if (res.data.news.length === 0) {
                     setServerError("Could not find any articles for your selection. Try again.");
                     setButtonLoading(false);
@@ -135,11 +150,16 @@ function StartPage({userPersonas}) {
                 gap: "10px",
             }}
             >
-                {personas.map((person, index) => (
+                {/* {personas.map((person, index) => (
                     <Button key={index} onClick={() => handleButtonPersona(person)} style={{
                         backgroundColor: persona === person ? "#BE5103" : "#165fc7"
                     }}>{person}</Button>
-                ))}
+                ))} */}
+                {personas.map((person, index) => (
+                    <Button key={index} onClick={() => handleButtonPersona(person)} style={{
+                      backgroundColor: persona.name === person.name ? "#BE5103" : "#165fc7"
+                    }}>{person.name}</Button>
+                  ))}
             </ButtonGroup>
             <h2>Ready to order?</h2>
             {buttonLoading ? 

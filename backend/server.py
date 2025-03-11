@@ -47,6 +47,7 @@ def root():
 # model for summary call
 class SummaryCall(BaseModel):
     persona: str
+    persona_description: str
     text: str
 
 # example summarization from OpenAI website
@@ -63,8 +64,10 @@ def summarize_text(body: SummaryCall):
             {
             "role": "system",
             "content": f"""
-            You are {body.persona}. Make it obvious that you are this persona, but also try to maintain the facts given in the text.
+            You are {body.persona}.
+            Here's a description that you should keep in mind for your response: {body.persona_description}
             Summarize the given text with the expected tonality, style of writing, and point of view. 
+            Try to maintain the facts given in the text.
             Summarize the story to be read in 1 minute, using average reading speed (200 wpm) as the calculator."""
             },
             {
