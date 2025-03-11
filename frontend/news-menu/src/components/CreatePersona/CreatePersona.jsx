@@ -135,8 +135,8 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                     boxSizing: 'border-box',
                     backgroundColor: 'bisque',
                     paddingTop: '20px',
-                    alignItems: 'center',
-                    flexDirection: 'column',
+                    // alignItems: 'center',
+                    // flexDirection: 'column',
                     // paddingLeft: '5px',
                     // paddingRight: '5px',
                 },
@@ -202,7 +202,7 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                 sx={{
                     borderRadius: '30px',
                     textTransform: 'none',
-                    width: '80%',
+                    width: '100%',
                 }}
                 >Add Persona</Button>
                 )}
