@@ -14,6 +14,9 @@ import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
+import InputAdornment from '@mui/material/InputAdornment';
+import InfoIcon from '@mui/icons-material/Info';
+import Tooltip from '@mui/material/Tooltip';
 
 function CreatePersona({ user, userPersonas, setUserPersonas }) {
 
@@ -132,6 +135,8 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                     boxSizing: 'border-box',
                     backgroundColor: 'bisque',
                     paddingTop: '20px',
+                    alignItems: 'center',
+                    flexDirection: 'column',
                     // paddingLeft: '5px',
                     // paddingRight: '5px',
                 },
@@ -142,30 +147,64 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                     onChange={(e) => setName(e.target.value)}
                     value={name}
                     label="Name"
+                    // helperText="Ex: 'Enthusiastic Journalist'"
                     sx={{
                         backgroundColor: 'white',
                         borderRadius: '5px',
+                        marginBottom: '20px',
                     }}
                     inputProps={{
                         maxLength: 50,
                     }}
+                    // According to chatgpt, inputProps is different from InputProps...
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <Tooltip title="Ex: 'Enthusiastic Journalist'">
+                                    <InfoIcon/>
+                                </Tooltip>
+                            </InputAdornment>
+                        )
+                    }}
+                    // endAdornment={
+                    //     <InputAdornment position="end">
+                    //         <InfoIcon />
+                    //     </InputAdornment>
+                    // }
                     />
                 <TextField
                     onChange={(e) => setDescription(e.target.value)}
                     value={description}
                     label="Description"
+                    // helperText="Ex: 'Long-time reporter who is particularly passionate about technology.'"
                     multiline
                     rows={4}
                     sx={{
                         backgroundColor: 'white',
                         borderRadius: '5px',
+                        marginBottom: '20px',
                     }}
                     inputProps={{
                         maxLength: 500,
                     }}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <Tooltip title="Ex: 'Long-time reporter who is particularly passionate about technology.'">
+                                    <InfoIcon/>
+                                </Tooltip>
+                            </InputAdornment>
+                        )
+                    }}
                     />
                 {isLoading ? (<CircularProgress />) : (
-                <Button onClick={handleCreatePersona} variant="contained">Add Persona</Button>
+                <Button onClick={handleCreatePersona} variant="contained"
+                sx={{
+                    borderRadius: '30px',
+                    textTransform: 'none',
+                    width: '80%',
+                }}
+                >Add Persona</Button>
                 )}
 
                 <Box sx={{

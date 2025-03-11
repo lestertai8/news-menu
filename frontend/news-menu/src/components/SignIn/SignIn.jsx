@@ -24,9 +24,10 @@ function SignIn({ setUser }) {
         <Button onClick={handleSignIn} variant="contained"
         sx={{
             fontSize: '16px',
-            borderRadius: '15px',
-            width: '200px',
-            height: '100px'
+            borderRadius: '100px',
+            width: '250px',
+            height: '60px',
+            textTransform: 'none',
         }}
         >
             Sign In with Google

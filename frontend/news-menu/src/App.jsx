@@ -11,6 +11,7 @@ import { auth, onAuthStateChanged } from "./firebase";
 // import CircularProgress from '@mui/material/CircularProgress';
 // import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -67,7 +68,24 @@ function App() {
 
           <Grid item xs={12}>
             {!user ? (
-              <SignIn setUser={setUser} />) : (
+              <div>
+                <Typography variant="h2"
+                sx={{
+                  marginTop: "100px",
+                  marginBottom: "50px"
+                  }}>
+                Welcome to your made-to-order news experience!
+                </Typography>
+                <Typography variant="h6"
+                sx={{
+                  fontSize: "16px",
+                  marginBottom: "50px"
+                  }}>
+                  Sign in to start getting news articles and discussions tailored to your interests.
+                </Typography>
+                <SignIn setUser={setUser} />
+              </div>
+            ) : (
               <Grid container spacing={2}>
                 <Grid item xs={3} sm={3} md={3} lg={3}>  
                   <CreatePersona user={user} userPersonas={userPersonas} setUserPersonas={setUserPersonas}/>
