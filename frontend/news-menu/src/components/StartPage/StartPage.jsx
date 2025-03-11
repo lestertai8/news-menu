@@ -161,6 +161,23 @@ function StartPage({userPersonas}) {
                     }}>{person.name}</Button>
                   ))}
             </ButtonGroup>
+            <h2>or your customized personas...</h2>
+            <ButtonGroup variant="contained" aria-label="Basic button group"
+            sx={{
+                gap: "10px",
+            }}
+            >
+                {/* {personas.map((person, index) => (
+                    <Button key={index} onClick={() => handleButtonPersona(person)} style={{
+                        backgroundColor: persona === person ? "#BE5103" : "#165fc7"
+                    }}>{person}</Button>
+                ))} */}
+                {userPersonas.map((person, index) => (
+                    <Button key={index} onClick={() => handleButtonPersona(person)} style={{
+                      backgroundColor: persona.name === person.name ? "#BE5103" : "#165fc7"
+                    }}>{person.name}</Button>
+                  ))}
+            </ButtonGroup>
             <h2>Ready to order?</h2>
             {buttonLoading ? 
             <CircularProgress /> :

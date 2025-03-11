@@ -43,7 +43,7 @@ function NewsAppBar( {user, setUser} ) {
             Sign Out
           </Button>)}
           <Typography className="title" variant="h2" component="div">
-            News Menu
+            news | menu
           </Typography>
         </Toolbar>
       </AppBar>
