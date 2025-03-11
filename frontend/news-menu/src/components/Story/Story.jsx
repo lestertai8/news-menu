@@ -176,8 +176,11 @@ function ActionAreaCard( {
 
   // https://stackoverflow.com/questions/67578008/how-to-get-value-from-material-ui-textfield-after-pressing-enter
   const onKeyPress = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !buttonLoading) {
       handleSubmitChatbot();
+      e.preventDefault();
+    }
+    else {
       e.preventDefault();
     }
   }
