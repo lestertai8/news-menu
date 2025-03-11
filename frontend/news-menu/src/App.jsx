@@ -9,6 +9,8 @@ import CreatePersona from './components/CreatePersona/CreatePersona';
 import SignIn from './components/SignIn/SignIn';
 import { auth, onAuthStateChanged } from "./firebase";
 // import CircularProgress from '@mui/material/CircularProgress';
+// import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -52,16 +54,32 @@ function App() {
 
     <>
       {!gettingUser && (
-        <div className="app-content" style={{marginLeft: "300px"}}>
-          <AppBar user={user} setUser={setUser}/>
-          {!user ? (
-          <SignIn setUser={setUser} />) : (
-          <div>
-            <CreatePersona user={user} userPersonas={userPersonas} setUserPersonas={setUserPersonas}/>
-            <StartPage userPersonas={userPersonas}/>
-          </div>
-          )}
-        </div>
+        // <div className="app-content" style={{marginLeft: "300px"}}>
+        <Grid container spacing={2}
+        sx={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          display: 'flex',
+        }}>
+          <Grid item xs={12}>
+            <AppBar user={user} setUser={setUser}/>
+          </Grid>
+
+          <Grid item xs={12}>
+            {!user ? (
+              <SignIn setUser={setUser} />) : (
+              <Grid container spacing={2}>
+                <Grid item xs={3} sm={3} md={3} lg={3}>  
+                  <CreatePersona user={user} userPersonas={userPersonas} setUserPersonas={setUserPersonas}/>
+                </Grid>
+                <Grid item xs={9} sm={9} md={9} lg={9}>
+                  <StartPage userPersonas={userPersonas}/>
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+        // </div>
       )}
     </>
   )
