@@ -9,9 +9,10 @@ import CreatePersona from './components/CreatePersona/CreatePersona';
 import SignIn from './components/SignIn/SignIn';
 import { auth, onAuthStateChanged } from "./firebase";
 // import CircularProgress from '@mui/material/CircularProgress';
-// import Box from '@mui/material/Box';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { TypeAnimation } from 'react-type-animation';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -76,6 +77,56 @@ function App() {
                   }}>
                 Welcome to your made-to-order news experience!
                 </Typography>
+                
+                {/* Source: https://www.npmjs.com/package/react-type-animation */}
+                <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginLeft: '140px',
+                  marginTop: 'none',
+                  marginBottom: 'none',
+                  // right: '500px',
+                }}>
+                  <Typography sx={{
+                    fontSize: '30px',
+                    display: 'inline-block',
+                    marginBottom: "50px",
+                    marginRight: "9px",
+                    minWidth: "136px"
+                  }}>Hear from</Typography>
+                  <Box
+                  sx={{
+                    textAlign: 'left',
+                    width: '600px',
+                  }}
+                  >
+                    <TypeAnimation
+                      preRenderFirstString={true}
+                      sequence={[
+                        // Same substring at the start will only be typed out once, initially
+                        'someone who doesn\'t agree with you',
+                        1000, // wait 1s before replacing "Mice" with "Hamsters"
+                        'someone like you',
+                        1000,
+                        'someone who is curious',
+                        1000,
+                        'someone passionate about news',
+                        1000
+                      ]}
+                      wrapper="span"
+                      speed={50}
+                      style={{ 
+                        fontSize: '30px', 
+                        display: 'inline-block',
+                        marginBottom: "50px",
+                        paddingBottom: "2px"
+                       }}
+                      repeat={Infinity}
+                    />
+                  </Box>
+                </Box>
                 <Typography variant="h6"
                 sx={{
                   fontSize: "16px",
