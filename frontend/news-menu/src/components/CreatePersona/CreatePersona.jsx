@@ -17,6 +17,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import InputAdornment from '@mui/material/InputAdornment';
 import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
+import Divider from '@mui/material/Divider';
 
 function CreatePersona({ user, userPersonas, setUserPersonas }) {
 
@@ -139,10 +140,33 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                     // flexDirection: 'column',
                     // paddingLeft: '5px',
                     // paddingRight: '5px',
+                    borderRadius: '50px',
+                    boxShadow: '4px 2px 2px black',
+                    padding: '3px',
+
                 },
             }}
             >
-                <h2>Create and save a custom persona</h2>
+                <Typography variant="h5" sx={{
+                    marginTop: '40px',
+                    marginBottom: '5px',
+                    textAlign: 'center',
+                }}
+                >Create your own voice</Typography>
+                <Box sx={{
+                    display: 'flex',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                }}
+                >
+                    <Divider sx={{
+                        borderColor: 'gray',
+                        borderWidth: '1px',
+                        width: '80%',
+                        // marginTop: '20px',
+                        marginBottom: '35px',
+                    }}/>
+                </Box>
                 <TextField
                     onChange={(e) => setName(e.target.value)}
                     value={name}
@@ -203,6 +227,7 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                     borderRadius: '30px',
                     textTransform: 'none',
                     width: '100%',
+                    backgroundColor: '#0084f5',
                 }}
                 >Add Persona</Button>
                 )}
@@ -215,6 +240,8 @@ function CreatePersona({ user, userPersonas, setUserPersonas }) {
                         <Card key={index} sx={{
                             marginBottom: '30px',
                             marginTop: '30px',
+                            borderRadius: '40px',
+                            boxShadow: '2px 2px 2px gray',
                         }}>
                             <CardHeader
                                 title={persona.name}

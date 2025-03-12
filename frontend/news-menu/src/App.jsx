@@ -108,9 +108,9 @@ function App() {
                         // Same substring at the start will only be typed out once, initially
                         'someone who doesn\'t agree with you',
                         1000, // wait 1s before replacing "Mice" with "Hamsters"
-                        'someone like you',
-                        1000,
                         'someone who is curious',
+                        1000,
+                        'someone like you',
                         1000,
                         'someone passionate about news',
                         1000

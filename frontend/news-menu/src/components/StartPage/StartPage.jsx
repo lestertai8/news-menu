@@ -5,6 +5,9 @@ import "./StartPage.css";
 import api from "../../api.js";
 import Story from "../Story/Story.jsx";
 import Alert from '@mui/material/Alert';
+import Step from '../Step/Step.jsx';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -38,7 +41,7 @@ function StartPage({userPersonas}) {
       ]
 
     const [persona, setPersona] = useState("");
-    const [time, setTime] = useState(0);
+    const [time, setTime] = useState(1);
     const [topic, setTopic] = useState("");
     // const [text, setText] = useState("");
     const [articles, setArticles] = useState([]);
@@ -116,35 +119,54 @@ function StartPage({userPersonas}) {
     
     return (
         <div className="start-page">
-            <h2>How long will your meal be?</h2>
-            <ButtonGroup variant="contained" aria-label="Basic button group">
+            {/* <h2>How long will your meal be?</h2> */}
+            {/* <ButtonGroup variant="contained" aria-label="Basic button group">
                 <Button onClick={() => handleButtonTime(1)} style={{
                     backgroundColor: time === 1 ? "#BE5103" : "#165fc7"
-                }}>Short</Button>
+                }}>Short</Button> */}
                 {/* <Button onClick={() => handleButtonTime(2)} style={{
                     backgroundColor: time === 2 ? "#BE5103" : "#165fc7"
                 }}>2 minutes</Button>
                 <Button onClick={() => handleButtonTime(3)} style={{
                     backgroundColor: time === 3 ? "#BE5103" : "#165fc7"
                 }}>3 minutes</Button> */}
-            </ButtonGroup>
-            <h2>What cuisine are you interested in?</h2>
+            {/* </ButtonGroup> */}
+            {/* <h2>What cuisine are you interested in?</h2> */}
+
+            {/* {!buttonLoading && (
+                <> */}
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}>
+                <Step number={1} instruction="choose a topic" />
+            </Box>
             <ButtonGroup variant="contained" aria-label="Basic button group"
             sx={{
                 gap: "10px",
             }}
             >
                 <Button onClick={() => handleButtonTopic("tech")} style={{
-                    backgroundColor: topic === "tech" ? "#BE5103" : "#165fc7"
+                    backgroundColor: topic === "tech" ? "#BE5103" : "#0084f5",
+                    textTransform: "none"
                 }}>Tech</Button>
                 <Button onClick={() => handleButtonTopic("sports")} style={{
-                    backgroundColor: topic === "sports" ? "#BE5103" : "#165fc7"
+                    backgroundColor: topic === "sports" ? "#BE5103" : "#0084f5",
+                    textTransform: "none"
                 }}>Sports</Button>
                 <Button onClick={() => handleButtonTopic("science")} style={{
-                    backgroundColor: topic === "science" ? "#BE5103" : "#165fc7"
+                    backgroundColor: topic === "science" ? "#BE5103" : "#0084f5",
+                    textTransform: "none"
                 }}>Science</Button>
             </ButtonGroup>
-            <h2>Who will your server be?</h2>
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}>
+                <Step number={2} instruction="set the tone" />
+            </Box>
             <ButtonGroup variant="contained" aria-label="Basic button group"
             sx={{
                 gap: "10px",
@@ -157,11 +179,28 @@ function StartPage({userPersonas}) {
                 ))} */}
                 {personas.map((person, index) => (
                     <Button key={index} onClick={() => handleButtonPersona(person)} style={{
-                      backgroundColor: persona.name === person.name ? "#BE5103" : "#165fc7"
+                      backgroundColor: persona.name === person.name ? "#BE5103" : "#0084f5",
+                      textTransform: "none"
                     }}>{person.name}</Button>
                   ))}
             </ButtonGroup>
-            <h2>or your customized personas...</h2>
+            <br/>
+            <br/>
+            {/* <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}>
+                <Divider sx={{
+                    borderColor: '#0084f5',
+                    borderWidth: 1,
+                    marginTop: '10px',
+                    marginBottom: '10px',
+                    width: '60%',
+                }}
+                />
+            </Box> */}
+            {/* <h2>or your customized personas...</h2> */}
             <ButtonGroup variant="contained" aria-label="Basic button group"
             sx={{
                 gap: "10px",
@@ -174,14 +213,27 @@ function StartPage({userPersonas}) {
                 ))} */}
                 {userPersonas.map((person, index) => (
                     <Button key={index} onClick={() => handleButtonPersona(person)} style={{
-                      backgroundColor: persona.name === person.name ? "#BE5103" : "#165fc7"
+                      backgroundColor: persona.name === person.name ? "#BE5103" : "#0084f5",
+                      textTransform: "none",
                     }}>{person.name}</Button>
                   ))}
             </ButtonGroup>
-            <h2>Ready to order?</h2>
+            {/* <h2>Ready to order?</h2> */}
+            <br/>
+            {/* </>
+            )} */}
             {buttonLoading ? 
-            <CircularProgress /> :
-            <Button variant="contained" onClick={handleSubmit}>All ready!</Button>}
+            <CircularProgress sx={{
+                marginTop: '30px',
+            }}/> :
+            <Button variant="contained" onClick={handleSubmit}
+            sx={{
+                backgroundColor: "#0084f5",
+                marginTop: "70px",
+                textTransform: "none",
+            }}
+            >All ready!</Button>}
+
             {unfilledAlert && <Alert severity="error" className="alert">Please select a time, news topic, and persona.</Alert>}
             {serverError && <Alert severity="error" className="alert">{serverError}</Alert>}
             {/* <h2>Original Text</h2>

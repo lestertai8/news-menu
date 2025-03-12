@@ -24,7 +24,10 @@ function NewsAppBar( {user, setUser} ) {
 
   return (
     <Box className="app-bar-box">
-      <AppBar className="app-bar">
+      <AppBar className="app-bar"
+      sx={{
+        backgroundColor: '#0084f5',
+      }}>
         <Toolbar>
           {/* <IconButton
             size="large"
