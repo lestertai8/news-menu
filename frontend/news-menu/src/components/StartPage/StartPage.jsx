@@ -147,10 +147,10 @@ function StartPage({userPersonas}) {
                 gap: "10px",
             }}
             >
-                <Button onClick={() => handleButtonTopic("tech")} style={{
-                    backgroundColor: topic === "tech" ? "#BE5103" : "#0084f5",
+                <Button onClick={() => handleButtonTopic("technology")} style={{
+                    backgroundColor: topic === "technology" ? "#BE5103" : "#0084f5",
                     textTransform: "none"
-                }}>Tech</Button>
+                }}>Technology</Button>
                 <Button onClick={() => handleButtonTopic("sports")} style={{
                     backgroundColor: topic === "sports" ? "#BE5103" : "#0084f5",
                     textTransform: "none"

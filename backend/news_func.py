@@ -5,9 +5,6 @@ from openai import OpenAI
 from pydantic import BaseModel
 
 # News API
-# hopefully github doesn't cry abt it
-if not os.getenv("NEWS_API_KEY"):
-    os.environ["NEWS_API_KEY"] = "MXoI1cBrjZZLvp5kfwXqZKZ1bUclXVFuaUfLcd0j"
 
 # create a news article class
 class NewsArticle:
@@ -98,15 +95,20 @@ def generate_quiz(text):
 
 
 def retrieve_news(category, num_articles, persona):
-    endpoint = "https://api.thenewsapi.com/v1/news/top"
+    # endpoint = "https://api.thenewsapi.com/v1/news/top"
+    endpoint = "https://newsapi.org/v2/top-headlines"
 
 
     # limit = num articles
     params = {
-        "api_token": os.getenv("NEWS_API_KEY"),
-        "locale": "us",
-        "limit": num_articles,
-        "categories": [category]
+        # "api_token": os.getenv("NEWS_API_KEY"),
+        "apiKey": os.getenv("NEWS_API_KEY"),
+        # "locale": "us",
+        "category": category,
+        "country": "us",
+        # "limit": num_articles,
+        "pageSize": num_articles,
+        # "categories": [category]
     }
     # Supported categories: general | science | sports | business | health | entertainment | tech | politics | food | travel
 
@@ -114,7 +116,7 @@ def retrieve_news(category, num_articles, persona):
     body = res.json()
 
     # check this out: https://www.thenewsapi.com/documentation
-    articles = body["data"]
+    articles = body["articles"]
     # print(articles)
 
     articles_array = []
@@ -125,11 +127,11 @@ def retrieve_news(category, num_articles, persona):
         quiz = generate_quiz(raw_text)
         articles_array.append(NewsArticle(
             articles[i]["title"],
-            articles[i]["published_at"],
+            articles[i]["publishedAt"],
             raw_text,
-            articles[i]["image_url"],
+            articles[i]["urlToImage"],
             articles[i]["url"],
-            articles[i]["source"],
+            articles[i]["source"]["name"],
             summarize_text(raw_text, persona),
             quiz.question,
             quiz.possible_answers,
