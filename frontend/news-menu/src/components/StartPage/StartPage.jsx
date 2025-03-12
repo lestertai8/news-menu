@@ -10,6 +10,8 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
 import CircularProgress from '@mui/material/CircularProgress';
+import SearchIcon from '@mui/icons-material/Search';
+import IconButton from '@mui/material/IconButton';
 
 
 // tutorial on audio in react app

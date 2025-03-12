@@ -180,9 +180,6 @@ function ActionAreaCard( {
       handleSubmitChatbot();
       e.preventDefault();
     }
-    else {
-      e.preventDefault();
-    }
   }
 
   const handleSubmitChatbot = async () => {
