@@ -36,6 +36,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 
+import Step from '../Step/Step.jsx';
+
 function ActionAreaCard( {
     userPersonas,
     title,
@@ -381,14 +383,14 @@ function ActionAreaCard( {
           }}>
             <Card 
             sx={{
-              width: "100%"
+              width: "100%",
             }}>
               <CardHeader
               sx={{
                 '& .MuiCardHeader-title': {
-                  fontFamily: "Times New Roman",
+                  // fontFamily: "Times New Roman",
                   fontSize: "30px",
-                  fontWeight: "bold",
+                  // fontWeight: "bold",
               }}}
                 title="Roundtable Talk"
                 subheader="Welcome in!"
@@ -411,13 +413,22 @@ function ActionAreaCard( {
                 {fieldError && <Alert severity="error" className="alert">Please select a persona and prompt.</Alert>}
                 {serverError && <Alert severity="error" className="alert">{serverError}</Alert>}
               <Box>
-                <Typography variant="h6" sx={{ textAlign: "center" }}>
+                {/* <Typography variant="h6" sx={{ textAlign: "center" }}>
                   Ask a question!
-                </Typography>
+                </Typography> */}
+                <Box sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                >
+                  <Step number="1" instruction="start the conversation" />
+                </Box>
                 <TextField
                   inputProps={{
                     maxLength: 300
                   }}
+                  label="Begin here"
                   onChange={(e) => setChatbotPrompt(e.target.value)}
                   value={chatbotPrompt}
                   multiline
@@ -467,9 +478,17 @@ function ActionAreaCard( {
               </Box>
 
               <Box>
-                <Typography variant="h6" sx={{ textAlign: "center" }}>
+                {/* <Typography variant="h6" sx={{ textAlign: "center" }}>
                   Who will answer?
-                </Typography>
+                </Typography> */}
+                <Box sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                >
+                  <Step number="2" instruction="choose who answers" />
+                </Box>
                 <ButtonGroup variant="contained" aria-label="Basic button group"
                 disableElevation
                 sx={{
@@ -483,14 +502,15 @@ function ActionAreaCard( {
                 >
                   {personas.map((person, index) => (
                     <Button key={index} onMouseDown={() => setChatbotPersona(person)} style={{
-                      backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#165fc7"
+                      backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#0084f5",
+                      textTransform: "none",
                     }}>{person.name}</Button>
                   ))}
                 </ButtonGroup>
 
-                <Typography gutterBottom variant="h6" sx={{ textAlign: "center" }}>
+                {/* <Typography gutterBottom variant="h6" sx={{ textAlign: "center" }}>
                   Your custom personas!
-                </Typography>
+                </Typography> */}
                 <ButtonGroup variant="contained" aria-label="Basic button group"
                 disableElevation
                 sx={{
@@ -504,7 +524,8 @@ function ActionAreaCard( {
                 >
                   {userPersonas.map((person, index) => (
                     <Button key={index} onMouseDown={() => setChatbotPersona(person)} style={{
-                      backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#165fc7"
+                      backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#0084f5",
+                      textTransform: "none",
                     }}>{person.name}</Button>
                   ))}
                 </ButtonGroup>

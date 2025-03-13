@@ -12,7 +12,7 @@ function Step({ number, instruction }) {
             border: '1px solid gray',
             boxShadow: '10px 5px 5px black',
             padding: '10px',
-            paddingRight: '180px',
+            paddingRight: '120px',
             borderRadius: '20px',
             backgroundColor: '#f0f1f6',
             marginBottom: '35px',
