@@ -53,6 +53,7 @@ function ChatBubble({ message, persona }) {
                 // backgroundColor: '#AC90E6',
                 // color: 'white',
                 ...personaCSS[persona],
+                fontFamily: 'Arial',
                 borderRadius: '10px',
                 padding: '12px',
                 marginLeft: '10px',

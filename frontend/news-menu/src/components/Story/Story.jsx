@@ -37,6 +37,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 
 import Step from '../Step/Step.jsx';
+import InputAdornment from '@mui/material/InputAdornment';
 
 function ActionAreaCard( {
     userPersonas,
@@ -439,6 +440,17 @@ function ActionAreaCard( {
                     borderRadius: '5px',
                     width: "90%",
                   }}
+                  InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                          {buttonLoading ?
+                          <CircularProgress /> : 
+                          <IconButton onMouseDown={handleSubmitChatbot}>
+                            <SendIcon/>
+                          </IconButton> }
+                        </InputAdornment>
+                    )
+                }}
                   />
                 {showChoices && chatbotChoices && chatbotChoices.length > 0 && (
                 //   <ButtonGroup variant="contained" aria-label="Basic button group"
@@ -493,7 +505,9 @@ function ActionAreaCard( {
                 disableElevation
                 sx={{
                   padding: "10px",
-                  margin: "10px",
+                  // margin: "10px",
+                  marginLeft: "10px",
+                  marginRight: "10px",
                   gap: "10px",
                   display: "flex",
                   justifyContent: "center",
@@ -515,7 +529,9 @@ function ActionAreaCard( {
                 disableElevation
                 sx={{
                   padding: "10px",
-                  margin: "10px",
+                  // margin: "10px",
+                  marginLeft: "10px",
+                  marginRight: "10px",
                   gap: "10px",
                   display: "flex",
                   justifyContent: "center",
@@ -537,11 +553,11 @@ function ActionAreaCard( {
               {/* {buttonLoading ? 
             <CircularProgress /> :
             <Button variant="contained" onClick={handleSubmit}>All ready!</Button>} */}
-              {buttonLoading ?
+              {/* {buttonLoading ?
               <CircularProgress /> : 
               <IconButton onMouseDown={handleSubmitChatbot}>
                 <SendIcon/>
-              </IconButton> }
+              </IconButton> } */}
             </Card>
           <Divider
           />
