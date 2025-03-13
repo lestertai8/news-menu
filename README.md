@@ -20,6 +20,7 @@ Open a new terminal and cd into the repo again:
 `cd backend`
 
 `export OPENAI_API_KEY="..."`
+`export NEWS_API_KEY="..."`
 
 `uvicorn server:app --reload`
 
