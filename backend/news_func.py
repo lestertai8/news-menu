@@ -27,9 +27,14 @@ def scrape_news(url):
     return article.text
 
 # use this to get summaries for news stories
-def summarize_text(text, persona):
+def summarize_text(text, persona, persona_description):
     # initialize the llm
     client = OpenAI()
+
+    # Source: got help from chatgpt in improving my prompting: "check out this code snippet i have.
+    #  i want this chat completion to take a persona name/description and summarize a news article with interjections from their point of view.
+    #  how do i adjust this prompt?"
+    # this prompt is from chatgpt
 
     response = client.chat.completions.create(
         # use gpt-4o-mini to save on api calls
@@ -38,9 +43,16 @@ def summarize_text(text, persona):
             {
             "role": "system",
             "content": f"""
-            You are {persona}. 
-            Summarize the given text with the expected tonality, style of writing, and point of view. 
-            Summarize the story to be read in 1 minute, using average reading speed (200 wpm) as the calculator."""
+            You are {persona}.
+            Here's a description that you should keep in mind for your response: {persona_description}
+            Your task is to summarize the given news text while **actively interjecting** with reactions, opinions, or rhetorical questions that align with your persona's style, knowledge, and beliefs.
+            
+            - Maintain the factual integrity of the news.
+            - Summarize the story to be read in 1 minute (approximately 200 words).
+            - Add brief but engaging **commentary, humor, skepticism, excitement, or frustration** where appropriate.
+            - Keep a natural flow between summary and persona-driven interjections.
+            - At the end of the summary, reflect on the news story and its implications to things relevant to your description.
+            """
             },
             {
             "role": "user",
@@ -94,7 +106,7 @@ def generate_quiz(text):
 
 
 
-def retrieve_news(category, num_articles, persona, headline, search):
+def retrieve_news(category, num_articles, persona, persona_description, headline, search):
     articles_array = []
     # endpoint = "https://api.thenewsapi.com/v1/news/top"
     if not search:
@@ -135,7 +147,7 @@ def retrieve_news(category, num_articles, persona, headline, search):
                 articles[i]["urlToImage"],
                 articles[i]["url"],
                 articles[i]["source"]["name"],
-                summarize_text(raw_text, persona),
+                summarize_text(raw_text, persona, persona_description),
                 quiz.question,
                 quiz.possible_answers,
                 quiz.answer
@@ -175,7 +187,7 @@ def retrieve_news(category, num_articles, persona, headline, search):
                 articles[i]["urlToImage"],
                 articles[i]["url"],
                 articles[i]["source"]["name"],
-                summarize_text(raw_text, persona),
+                summarize_text(raw_text, persona, persona_description),
                 quiz.question,
                 quiz.possible_answers,
                 quiz.answer
