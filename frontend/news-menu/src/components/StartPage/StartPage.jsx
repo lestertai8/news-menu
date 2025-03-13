@@ -12,6 +12,11 @@ import Divider from '@mui/material/Divider';
 import CircularProgress from '@mui/material/CircularProgress';
 import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Tooltip from '@mui/material/Tooltip';
+import InfoIcon from '@mui/icons-material/Info';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
 
 
 // tutorial on audio in react app
@@ -45,11 +50,15 @@ function StartPage({userPersonas}) {
     const [persona, setPersona] = useState("");
     const [time, setTime] = useState(1);
     const [topic, setTopic] = useState("");
+    const [headline, setHeadline] = useState("");
+    const [search, setSearch] = useState(false);
     // const [text, setText] = useState("");
     const [articles, setArticles] = useState([]);
     const [unfilledAlert, setUnfilledAlert] = useState(false);
     // const [summary, setSummary] = useState("");
     // const [quiz, setQuiz] = useState("");
+
+    // console.log(headline);
 
     // set the persona when the button is clicked
     const handleButtonPersona = (name) => {
@@ -79,7 +88,7 @@ function StartPage({userPersonas}) {
 
     const handleSubmit = async () => {
         try {
-            if (!time || !topic || !persona) {
+            if (!time || (!topic && !search) || !persona || (!headline && search)) {
                 setUnfilledAlert(true);
                 return;
             }
@@ -88,7 +97,7 @@ function StartPage({userPersonas}) {
                 // button begins to load
                 setButtonLoading(true);
                 setArticles([]);
-                const res = await api.post("/articles", {category: topic, time: time, persona: persona.name, persona_description: persona.description});
+                const res = await api.post("/articles", {category: topic, time: time, persona: persona.name, persona_description: persona.description, headline: headline, search: search });
                 if (res.data.news.length === 0) {
                     setServerError("Could not find any articles for your selection. Try again.");
                     setButtonLoading(false);
@@ -144,9 +153,66 @@ function StartPage({userPersonas}) {
             }}>
                 <Step number={1} instruction="choose a topic" />
             </Box>
+
+            {/* <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#f0f1f6',
+                borderRadius: '0px',
+                width: 'fit-content',
+            }}> */}
+                <Button
+                    onClick={() => setSearch(!search)}
+                    sx={{
+                        textTransform: 'none',
+                        backgroundColor: '#f0f1f6',
+                        marginBottom: '20px',
+                        borderRadius: '20px',
+                        color: 'black',
+                        width: '220px',
+                        // fontSize: '12px',
+                    }}>
+                    {!search ? (<>or search for a headline <SearchIcon /></>) : (<>return to search by topic<NewspaperIcon /></>)}
+                </Button>
+            {/* </Box> */}
+
+            <br/>
+
+            {search && (<TextField
+                    onChange={(e) => setHeadline(e.target.value)}
+                    value={headline}
+                    label="Search a headline"
+                    sx={{
+                        backgroundColor: 'white',
+                        borderRadius: '5px',
+                        marginBottom: '20px',
+                    }}
+                    inputProps={{
+                        maxLength: 50,
+                    }}
+                    // According to chatgpt, inputProps is different from InputProps...
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <Tooltip title="Ex: 'Superbowl', 'vaccines', 'Canada tariffs'">
+                                    <InfoIcon/>
+                                </Tooltip>
+                            </InputAdornment>
+                        )
+                    }}
+                    // endAdornment={
+                    //     <InputAdornment position="end">
+                    //         <InfoIcon />
+                    //     </InputAdornment>
+                    // }
+                    />)}
+
+            {!search && (
             <ButtonGroup variant="contained" aria-label="Basic button group"
             sx={{
                 gap: "10px",
+                marginBottom: '39px',
             }}
             >
                 <Button onClick={() => handleButtonTopic("technology")} style={{
@@ -162,6 +228,7 @@ function StartPage({userPersonas}) {
                     textTransform: "none"
                 }}>Science</Button>
             </ButtonGroup>
+            )}
             <Box sx={{
                 display: 'flex',
                 alignItems: 'center',

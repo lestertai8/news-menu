@@ -153,10 +153,12 @@ class ArticleCall(BaseModel):
     category: str
     time: int
     persona: str
+    headline: str
+    search: bool
 
 @app.post("/articles")
 def articles(body: ArticleCall):
-    articles = news_func.retrieve_news(body.category, body.time, body.persona)
+    articles = news_func.retrieve_news(body.category, body.time, body.persona, body.headline, body.search)
     # print(news)
     # articles now holds an array of NewsArticle objects. we need to create a json object to send
     # obj.__dict__ converts the object to a dictionary?

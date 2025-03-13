@@ -280,7 +280,7 @@ function ActionAreaCard( {
       <Card className="newspaper-card">
           <CardHeader
             title={title}
-            subheader={Date(date)}
+            subheader={date}
             action={
               <IconButton onClick={handleAudio}>
                 <RecordVoiceOverIcon />

@@ -94,60 +94,93 @@ def generate_quiz(text):
 
 
 
-def retrieve_news(category, num_articles, persona):
-    # endpoint = "https://api.thenewsapi.com/v1/news/top"
-    endpoint = "https://newsapi.org/v2/top-headlines"
-
-
-    # limit = num articles
-    params = {
-        # "api_token": os.getenv("NEWS_API_KEY"),
-        "apiKey": os.getenv("NEWS_API_KEY"),
-        # "locale": "us",
-        "category": category,
-        "country": "us",
-        # "limit": num_articles,
-        "pageSize": num_articles,
-        # "categories": [category]
-    }
-    # Supported categories: general | science | sports | business | health | entertainment | tech | politics | food | travel
-
-    res = requests.get(endpoint, params=params)
-    body = res.json()
-
-    # check this out: https://www.thenewsapi.com/documentation
-    articles = body["articles"]
-    # print(articles)
-
+def retrieve_news(category, num_articles, persona, headline, search):
     articles_array = []
-    # len(articles) is equal to the 'limit' param
-    # we need to build an array of article objects
-    for i in range(len(articles)):
-        raw_text = scrape_news(articles[i]["url"])
-        quiz = generate_quiz(raw_text)
-        articles_array.append(NewsArticle(
-            articles[i]["title"],
-            articles[i]["publishedAt"],
-            raw_text,
-            articles[i]["urlToImage"],
-            articles[i]["url"],
-            articles[i]["source"]["name"],
-            summarize_text(raw_text, persona),
-            quiz.question,
-            quiz.possible_answers,
-            quiz.answer
-        ))
-    # print(articles_array[0].text)
+    # endpoint = "https://api.thenewsapi.com/v1/news/top"
+    if not search:
+        endpoint = "https://newsapi.org/v2/top-headlines"
 
-    # for i in range(len(articles)):
-    #     print(articles[i]["title"])
-    #     print(articles[i]["description"])
-    #     print(articles[i]["url"])
-    #     print(articles[i]["image_url"])
 
-    # url_array = []
-    # for i in range(len(articles)):
-    #     url_array.append(articles[i]["url"])
+        # limit = num articles
+        params = {
+            # "api_token": os.getenv("NEWS_API_KEY"),
+            "apiKey": os.getenv("NEWS_API_KEY"),
+            # "locale": "us",
+            "category": category,
+            "country": "us",
+            # "limit": num_articles,
+            # "q": headline,
+            "pageSize": num_articles,
+            # "categories": [category]
+        }
+        # Supported categories: general | science | sports | business | health | entertainment | tech | politics | food | travel
+
+        res = requests.get(endpoint, params=params)
+        body = res.json()
+
+        # check this out: https://www.thenewsapi.com/documentation
+        articles = body["articles"]
+        # print(articles)
+
+        # articles_array = []
+        # len(articles) is equal to the 'limit' param
+        # we need to build an array of article objects
+        for i in range(len(articles)):
+            raw_text = scrape_news(articles[i]["url"])
+            quiz = generate_quiz(raw_text)
+            articles_array.append(NewsArticle(
+                articles[i]["title"],
+                articles[i]["publishedAt"],
+                raw_text,
+                articles[i]["urlToImage"],
+                articles[i]["url"],
+                articles[i]["source"]["name"],
+                summarize_text(raw_text, persona),
+                quiz.question,
+                quiz.possible_answers,
+                quiz.answer
+            ))
+    else:
+        endpoint = "https://newsapi.org/v2/everything"
+
+        # limit = num articles
+        params = {
+            "apiKey": os.getenv("NEWS_API_KEY"),
+            "q": headline,
+            "searchIn": "title",
+            "language": "en",
+            "pageSize": num_articles,
+        }
+        # Supported categories: general | science | sports | business | health | entertainment | tech | politics | food | travel
+
+        res = requests.get(endpoint, params=params)
+        body = res.json()
+        # print(body)
+
+        # check this out: https://www.thenewsapi.com/documentation
+        articles = body["articles"]
+        # print("WHY ISNT THIS WORKING")
+        # print(body["totalResults"])
+
+        # articles_array = []
+        # len(articles) is equal to the 'limit' param
+        # we need to build an array of article objects
+        for i in range(len(articles)):
+            raw_text = scrape_news(articles[i]["url"])
+            quiz = generate_quiz(raw_text)
+            articles_array.append(NewsArticle(
+                articles[i]["title"],
+                articles[i]["publishedAt"],
+                raw_text,
+                articles[i]["urlToImage"],
+                articles[i]["url"],
+                articles[i]["source"]["name"],
+                summarize_text(raw_text, persona),
+                quiz.question,
+                quiz.possible_answers,
+                quiz.answer
+            ))
+
 
     return articles_array
 
