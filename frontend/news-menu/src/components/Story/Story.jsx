@@ -417,13 +417,73 @@ function ActionAreaCard( {
                 {/* <Typography variant="h6" sx={{ textAlign: "center" }}>
                   Ask a question!
                 </Typography> */}
+                
+
+              <Box>
+                {/* <Typography variant="h6" sx={{ textAlign: "center" }}>
+                  Who will answer?
+                </Typography> */}
                 <Box sx={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
                 >
-                  <Step number="1" instruction="start the conversation" />
+                  <Step number="1" instruction="choose who talks" />
+                </Box>
+                <ButtonGroup variant="contained" aria-label="Basic button group"
+                disableElevation
+                sx={{
+                  padding: "10px",
+                  // margin: "10px",
+                  marginLeft: "10px",
+                  marginRight: "10px",
+                  gap: "10px",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                }}
+                >
+                  {personas.map((person, index) => (
+                    <Button key={index} onMouseDown={() => setChatbotPersona(person)} style={{
+                      backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#0084f5",
+                      textTransform: "none",
+                    }}>{person.name}</Button>
+                  ))}
+                </ButtonGroup>
+
+                {/* <Typography gutterBottom variant="h6" sx={{ textAlign: "center" }}>
+                  Your custom personas!
+                </Typography> */}
+                <ButtonGroup variant="contained" aria-label="Basic button group"
+                disableElevation
+                sx={{
+                  padding: "10px",
+                  // margin: "10px",
+                  marginLeft: "10px",
+                  marginRight: "10px",
+                  gap: "10px",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                }}
+                >
+                  {userPersonas.map((person, index) => (
+                    <Button key={index} onMouseDown={() => setChatbotPersona(person)} style={{
+                      backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#0084f5",
+                      textTransform: "none",
+                    }}>{person.name}</Button>
+                  ))}
+                </ButtonGroup>
+                </Box>
+
+                <Box sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                >
+                  <Step number="2" instruction="say something" />
                 </Box>
                 <TextField
                   inputProps={{
@@ -439,6 +499,7 @@ function ActionAreaCard( {
                   sx={{
                     borderRadius: '5px',
                     width: "90%",
+                    marginBottom: "30px",
                   }}
                   InputProps={{
                     endAdornment: (
@@ -488,64 +549,6 @@ function ActionAreaCard( {
                 </List>
                 )}
               </Box>
-
-              <Box>
-                {/* <Typography variant="h6" sx={{ textAlign: "center" }}>
-                  Who will answer?
-                </Typography> */}
-                <Box sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                >
-                  <Step number="2" instruction="choose who answers" />
-                </Box>
-                <ButtonGroup variant="contained" aria-label="Basic button group"
-                disableElevation
-                sx={{
-                  padding: "10px",
-                  // margin: "10px",
-                  marginLeft: "10px",
-                  marginRight: "10px",
-                  gap: "10px",
-                  display: "flex",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                }}
-                >
-                  {personas.map((person, index) => (
-                    <Button key={index} onMouseDown={() => setChatbotPersona(person)} style={{
-                      backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#0084f5",
-                      textTransform: "none",
-                    }}>{person.name}</Button>
-                  ))}
-                </ButtonGroup>
-
-                {/* <Typography gutterBottom variant="h6" sx={{ textAlign: "center" }}>
-                  Your custom personas!
-                </Typography> */}
-                <ButtonGroup variant="contained" aria-label="Basic button group"
-                disableElevation
-                sx={{
-                  padding: "10px",
-                  // margin: "10px",
-                  marginLeft: "10px",
-                  marginRight: "10px",
-                  gap: "10px",
-                  display: "flex",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                }}
-                >
-                  {userPersonas.map((person, index) => (
-                    <Button key={index} onMouseDown={() => setChatbotPersona(person)} style={{
-                      backgroundColor: chatbotPersona.name === person.name ? "#BE5103" : "#0084f5",
-                      textTransform: "none",
-                    }}>{person.name}</Button>
-                  ))}
-                </ButtonGroup>
-                </Box>
 
               {/* <Button onClick={handleSubmitChatbot}>
                 Submit Inquiry
