@@ -302,14 +302,23 @@ function ActionAreaCard( {
             <CardContent className="story-card">
               <Typography gutterBottom variant="h5" component="div" 
               sx={{ 
-                textAlign: 'left',
+                textAlign: 'center',
                 whiteSpace: 'pre-line',
                 }}>
                 {!showSummary ? "Original Article" : `AI-Summarized Article`}
                 <br/>
                 <br/>
-                {!showSummary ? text : summary}
+                
               </Typography>
+            </CardContent>
+            <CardContent className="story-card">
+              <Typography variant="h6" component="div"
+              sx={{
+                textAlign: 'left',
+                whiteSpace: 'pre-line',
+              }}>
+                {!showSummary ? text : summary}
+                </Typography>
             </CardContent>
           </CardActionArea>
 
